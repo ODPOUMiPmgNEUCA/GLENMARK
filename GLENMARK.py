@@ -89,7 +89,7 @@ def znajdz_podobny_kod(kod, lista_kodow, limit=1):
 df2['Podobny kod pocztowy'] = df2['Kod pocztowy'].apply(lambda x: znajdz_podobny_kod(x, lista['Kod pocztowy']))
 
 # Opcjonalnie: łączenie danych po znalezionym podobnym kodzie pocztowym
-df2_merged = df2.merge(lista[['Kod pocztowy', 'Kod klienta', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
+df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
                        left_on='Podobny kod pocztowy', right_on='Kod pocztowy', how='left')
 
 # Wyświetlenie wyniku
