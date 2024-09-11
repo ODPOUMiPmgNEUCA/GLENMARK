@@ -83,43 +83,11 @@ df2 = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', '
 df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
 
 #2 ETAP CYRKU
-# Funkcja do dopasowywania kodów na podstawie krótszych prefiksów
-def dopasuj_kody(df2, lista, dlugosc_prefixu):
-    # Sprawdź dostępność kolumn
-    assert 'Kod pocztowy' in df2.columns, "Kolumna 'Kod pocztowy' nie istnieje w df2"
-    assert 'Kod pocztowy' in lista.columns, "Kolumna 'Kod pocztowy' nie istnieje w lista"
-    
-    # Dodanie kolumn z prefiksami
-    df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:dlugosc_prefixu]
-    lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:dlugosc_prefixu]
-    
-    # Dopasowanie dla brakujących kodów
-    df_no_match = df2[df2['Kod pocztowy_lista'].isna()]  # Wiersze bez dopasowania
-    df_with_match = df2[~df2['Kod pocztowy_lista'].isna()]  # Wiersze z dopasowaniem
-    
-    # Łączymy dane dla brakujących kodów
-    df_no_match = df_no_match.drop(['Kod pocztowy_lista', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu'], axis=1, errors='ignore')
-    df_no_match = df_no_match.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
-                                    on='Prefix', how='left')
-    
-    # Łączymy z powrotem wiersze, które mają już dopasowanie, z tymi nowymi po korekcie
-    df2 = pd.concat([df_with_match, df_no_match], ignore_index=True)
-    return df2
 
-# Iteracyjne dopasowanie dla coraz krótszych prefiksów
-for dlugosc in range(4, 1, -1):
-    df2 = dopasuj_kody(df2, lista, dlugosc)
+df2_1 = df2[df2['Kod pocztowy_lista'] == None]
 
 
-# Usuwamy duplikaty, pozostawiając tylko pierwsze dopasowanie
-df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
-
-df2
-
-
-
-
-
+df2_1
 
 
 
