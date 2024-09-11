@@ -70,16 +70,6 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
-# Usuwanie z listy aptek, które są w df1 :
-merged = pd.merge(lista, df1, on=['Kod pocztowy', 'Nazwa apteki'], how='left', indicator=True)
-lista1 = merged[merged['_merge'] == 'left_only'].drop(columns='_merge')
-lista1
-
-st.write(len(lista))
-st.write(len(lista1))
-
-
-
 
 # Funkcja do wyszukiwania najbardziej podobnych kodów pocztowych, uwzględniająca pierwsze dwa znaki
 def znajdz_podobny_kod(kod, lista_kodow, limit=1):
