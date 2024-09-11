@@ -71,7 +71,7 @@ df1
 
 
 kody = lista['Kod pocztowy'].unique().tolist()
-kody
+
 
 
 
