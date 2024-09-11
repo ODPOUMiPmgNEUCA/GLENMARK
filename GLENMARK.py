@@ -72,7 +72,6 @@ df1
 # Wszystkie dostępne kody :
 kody = lista['Kod pocztowy'].unique().tolist()
 
-st.write(len(kody))
 
 
 
