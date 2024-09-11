@@ -69,7 +69,7 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
-
+'''
 #TERAZ CYRK
 #1 ETAP CYRKU
 df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:5]
@@ -102,6 +102,8 @@ df2 = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', '
 df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
 
 df2
+
+'''
 
 
 
