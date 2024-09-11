@@ -43,9 +43,9 @@ div[class*="stSelectbox"] label {
 df = st.file_uploader(
         label = "Wrzuć plik oryginalny raport od działu rozliczeń"
     )
-    if df:
-        df = pd.read_excel(df, sheet_name = 'Promocje na utrzymanie i FUS', skiprows = 15, usecols = [1,2,9,10])
-        st.write(df.head())
+if df:
+    df = pd.read_excel(df, sheet_name = 'Promocje na utrzymanie i FUS', skiprows = 15, usecols = [1,2,9,10])
+    st.write(df.head())
 
 
     
