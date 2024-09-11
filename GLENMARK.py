@@ -120,8 +120,8 @@ st.write(len(df1))
 st.write(df_dopasowany['dopasowany_kod'].isna().sum())
 st.write(df_dopasowany['dopasowany_kod'].dropna().nunique())
 
-
-
+liczba_duplikatow = (df_dopasowany['dopasowany_kod'] == df_dopasowany['Kod pocztowy']).sum()
+liczba_diplikatow
 
 
 
