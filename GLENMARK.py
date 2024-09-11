@@ -115,7 +115,9 @@ df_dopasowany = dopasuj_inny_kod_pocztowy(df1, 'Kod_pocztowy', kody)
 df_dopasowany
 
 
+st.write(len(lista))
 st.write(len(df1))
+
 
 
 
