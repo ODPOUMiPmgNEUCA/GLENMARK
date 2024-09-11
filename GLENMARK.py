@@ -75,8 +75,8 @@ merged = pd.merge(lista, df1, on=['Kod pocztowy', 'Nazwa apteki'], how='left', i
 lista1 = merged[merged['_merge'] == 'left_only'].drop(columns='_merge')
 lista1
 
-len(lista)
-len(lista1)
+st.write(len(lista))
+st.write(len(lista1))
 
 
 
