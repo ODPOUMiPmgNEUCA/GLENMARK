@@ -70,7 +70,7 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 # Wszystkie dostępne kody :
-kody = lista['Kod pocztowy'].unique().tolist()
+kody = df['Kod pocztowy'].unique().tolist()
 
 def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
     # Tworzymy zbiór, aby przechowywać już użyte kody
