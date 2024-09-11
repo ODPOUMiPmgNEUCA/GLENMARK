@@ -81,7 +81,7 @@ df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'MiejscowoÅ
 # Usuwamy duplikaty, pozostawiajÄ…c tylko pierwsze dopasowanie
 df2_unique = df2_merged.drop_duplicates(subset=['Kod pocztowy_df2'])
 
-df_unique
+df2_unique
 
 
 
