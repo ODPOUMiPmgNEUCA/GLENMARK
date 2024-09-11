@@ -91,7 +91,7 @@ def dopasuj_kody_pocztowe(df, kolumna_kodu, lista_kodow):
         return None
 
     # Tworzymy nową kolumnę w df z dopasowanymi kodami
-    df['dopasowany_kod'] = df[kolumna_kodu].apply(znajdz_podobny_kod)
+    df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
     
     return df
 
