@@ -81,6 +81,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
         # Pobieramy pierwsze trzy cyfry kodu
         prefix_3 = kod[:4]
         prefix_2 = kod[:2]
+        prefix_1 = kod[:1]
         
         # Próbujemy znaleźć kod pocztowy na podstawie trzech pierwszych cyfr
         for kod_z_listy in kody:
@@ -91,6 +92,12 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
         # Jeśli nie uda się znaleźć na podstawie trzech cyfr, próbujemy z dwoma pierwszymi
         for kod_z_listy in kody:
             if kod_z_listy.startswith(prefix_2) and kod_z_listy not in wykorzystane_kody and kod_z_listy != kod:
+                wykorzystane_kody.add(kod_z_listy)
+                return kod_z_listy
+
+        # Jeśli nie uda się znaleźć na podstawie dwóch cyfr, próbujemy z pierwszą
+        for kod_z_listy in kody:
+            if kod_z_listy.startswith(prefix_1) and kod_z_listy not in wykorzystane_kody and kod_z_listy != kod:
                 wykorzystane_kody.add(kod_z_listy)
                 return kod_z_listy
 
