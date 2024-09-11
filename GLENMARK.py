@@ -101,6 +101,14 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
                 wykorzystane_kody.add(kod_z_listy)
                 return kod_z_listy
 
+        # Jeśli nie uda się znaleźć na podstawie żadnych cyfr, próbujemy znaleźć kod o tych samych dwóch pierwszych cyfrach
+        for kod_z_listy in kody:
+            if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                # Dodajemy kod, jeśli nie jest identyczny z oryginalnym kodem
+                if kod_z_listy not in wykorzystane_kody:
+                    wykorzystane_kody.add(kod_z_listy)
+                    return kod_z_listy
+
         # Jeśli nie ma żadnego dopasowania, nie zwracamy nic (można ewentualnie dodać inne zachowanie)
         return None
 
