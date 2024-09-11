@@ -129,9 +129,9 @@ liczba_duplikatow = (df_dopasowany['dopasowany_kod'] == df_dopasowany['Kod poczt
 liczba_duplikatow
 
 
-df_dopasowane = df_dopasowane.merge(lista, left_on='dopasowany_kod', right_on='Kod pocztowy', suffixes=('', '_dopasowany'))
-df_dopasowane = df_dopasowane.drop(columns=['Kod pocztowy_dopasowany'])
-df_dopasowane
+df_dopasowany = df_dopasowany.merge(lista, left_on='dopasowany_kod', right_on='Kod pocztowy', suffixes=('', '_dopasowany'))
+df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
+df_dopasowany
 
 
 
