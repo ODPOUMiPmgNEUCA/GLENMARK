@@ -118,7 +118,7 @@ df_dopasowany
 st.write(len(lista))
 st.write(len(df1))
 
-
+df_dopasowany['dopasowany_kod'].isna().sum()
 
 
 
