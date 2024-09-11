@@ -50,5 +50,6 @@ if df:
     
 lista = pd.read_excel('Lista aptek Glenmark.xlsx')
 
+df = df[df['Rodzaj promocji'] =='IPRA']
 
     
