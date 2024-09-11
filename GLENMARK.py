@@ -95,7 +95,7 @@ lista = lista.drop('Prefix', errors = 'ignore')
 lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:4]
 
 # Dopasowanie kodów pocztowych na podstawie pierwszych dwóch cyfr
-df2 = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
+df2 = df2.merge(lista[['Kod pocztowy_df2', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
                        left_on='Prefix', right_on='Prefix', how='left', suffixes=('_df2', '_lista'))
 
 # Usuwamy duplikaty, pozostawiając tylko pierwsze dopasowanie
