@@ -71,17 +71,46 @@ df1
 
 
 #TERAZ CYRK
+#1 ETAP CYRKU
 df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:5]
 lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:5]
 
 # Dopasowanie kodów pocztowych na podstawie pierwszych dwóch cyfr
-df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
+df2 = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
                        left_on='Prefix', right_on='Prefix', how='left', suffixes=('_df2', '_lista'))
 
 # Usuwamy duplikaty, pozostawiając tylko pierwsze dopasowanie
-df2_unique = df2_merged.drop_duplicates(subset=['Kod pocztowy_df2'])
+df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
 
-df2_unique
+#2 ETAP CYRKU
+# Funkcja do dopasowywania kodów na podstawie krótszych prefiksów
+def dopasuj_kody(df2, lista, dlugosc_prefixu):
+    df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:dlugosc_prefixu]
+    lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:dlugosc_prefixu]
+    
+    # Dopasowanie dla brakujących kodów
+    df_no_match = df2[df2['Kod pocztowy_lista'].isna()]  # Wiersze bez dopasowania
+    df_with_match = df2[~df2['Kod pocztowy_lista'].isna()]  # Wiersze z dopasowaniem
+    
+    # Łączymy dane dla brakujących kodów
+    df_no_match = df_no_match.drop(['Kod pocztowy_lista', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu'], axis=1)
+    df_no_match = df_no_match.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
+                                    on='Prefix', how='left')
+    
+    # Łączymy z powrotem wiersze, które mają już dopasowanie, z tymi nowymi po korekcie
+    df2 = pd.concat([df_with_match, df_no_match], ignore_index=True)
+    return df2
+
+# Iteracyjne dopasowanie dla coraz krótszych prefiksów
+for dlugosc in range(4, 1, -1):
+    df2 = dopasuj_kody(df2, lista, dlugosc)
+
+
+# Usuwamy duplikaty, pozostawiając tylko pierwsze dopasowanie
+df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
+
+df2
+
 
 
 
