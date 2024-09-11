@@ -51,8 +51,15 @@ if df:
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
 df = df[df['Rodzaj promocji'] =='IPRA']
-df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+
+df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+    'Ilość sprzedana': 'sum',
+    'Wartość sprzedaży': 'sum'
+}).reset_index()
+
 df
+
+df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
 df1 = df[df['Czy w liście'] == True]
 
