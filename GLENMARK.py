@@ -71,8 +71,8 @@ df1
 
 
 #TERAZ CYRK
-df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:2]
-lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:2]
+df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:5]
+lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:5]
 
 # Dopasowanie kodów pocztowych na podstawie pierwszych dwóch cyfr
 df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Prefix']],
