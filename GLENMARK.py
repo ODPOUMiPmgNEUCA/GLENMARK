@@ -54,4 +54,8 @@ df = df[df['Rodzaj promocji'] =='IPRA']
 df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 df
 
+df1 = df[df['Czy w liście'] == True]
+
+df2 = df[df['Czy w liście'] == False]
+
     
