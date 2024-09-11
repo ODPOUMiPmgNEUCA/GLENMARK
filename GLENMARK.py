@@ -70,7 +70,22 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
+kody = lista['Kod pocztowy].unique().tolist()
+kody
 
+
+
+
+
+
+
+
+
+
+
+
+
+'''
 # Funkcja do wyszukiwania najbardziej podobnych kodów pocztowych, uwzględniająca pierwsze dwa znaki
 def znajdz_podobny_kod(kod, lista_kodow, limit=1):
     prefix = kod[:2]
@@ -96,7 +111,7 @@ df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowo�
 df2_merged
 
 
-'''
+
 #TERAZ CYRK
 #1 ETAP CYRKU
 df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:5]
