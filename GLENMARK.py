@@ -69,6 +69,32 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
+
+# Funkcja do wyszukiwania najbardziej podobnych kodów pocztowych, uwzględniająca pierwsze dwa znaki
+def znajdz_podobny_kod(kod, lista_kodow, limit=1):
+    prefix = kod[:2]
+    # Filtracja kody pocztowe, które zaczynają się od tych samych dwóch znaków
+    kody_do_porownania = [k for k in lista_kodow if k.startswith(prefix)]
+    
+    # Jeśli nie ma dopasowań na podstawie prefiksu, zwróć None
+    if not kody_do_porownania:
+        return None
+    
+    # Wyszukiwanie najbardziej podobnego kodu wśród przefiltrowanych
+    podobny_kod = process.extractOne(kod, kody_do_porownania, scorer=fuzz.token_sort_ratio)
+    return podobny_kod[0] if podobny_kod else None
+
+# Dodanie kolumny z najbardziej podobnym kodem pocztowym
+df2['Podobny kod pocztowy'] = df2['Kod pocztowy'].apply(lambda x: znajdz_podobny_kod(x, lista['Kod pocztowy']))
+
+# Opcjonalnie: łączenie danych po znalezionym podobnym kodzie pocztowym
+df2_merged = df2.merge(lista[['Kod pocztowy', 'Kod klienta', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
+                       left_on='Podobny kod pocztowy', right_on='Kod pocztowy', how='left')
+
+# Wyświetlenie wyniku
+print(df2_merged)
+
+
 '''
 #TERAZ CYRK
 #1 ETAP CYRKU
