@@ -90,7 +90,7 @@ df2 = df2[df2['Kod pocztowy_lista'].isna()]
 df2 = df2.drop('Prefix', errors = 'ignore')
 
 
-df2['Prefix'] = df2['Kod pocztowy'].astype(str).str[:4]
+df2['Prefix'] = df2['Kod pocztowy_df2'].astype(str).str[:4]
 lista = lista.drop('Prefix', errors = 'ignore')
 lista['Prefix'] = lista['Kod pocztowy'].astype(str).str[:4]
 
