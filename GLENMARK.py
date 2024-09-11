@@ -76,7 +76,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
     # Tworzymy zbiór, aby przechowywać już użyte kody
     wykorzystane_kody = set()
 
-    # Funkcja pomocnicza do dopasowania kodu, który nie jest identyczny
+    # Funkcja pomocnicza do dopasowania kodu, który jest podobny, ale nie identyczny
     def znajdz_podobny_kod(kod):
         # Pobieramy pierwsze trzy cyfry kodu
         prefix = kod[:4]
@@ -90,7 +90,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
         # Jeśli nie znaleziono żadnego pasującego kodu, zwróć None
         return None
 
-    # Tworzymy nową kolumnę w df z dopasowanymi kodami, ale różnymi od oryginalnych
+    # Tworzymy nową kolumnę w df z dopasowanymi kodami
     df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
     
     return df
