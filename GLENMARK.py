@@ -93,7 +93,7 @@ df2_merged = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowo≈
                        left_on='Podobny kod pocztowy', right_on='Kod pocztowy', how='left')
 
 # Wy≈õwietlenie wyniku
-print(df2_merged)
+df2_merged
 
 
 '''
