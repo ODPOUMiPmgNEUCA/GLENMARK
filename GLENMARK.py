@@ -72,6 +72,32 @@ df1
 # Wszystkie dostępne kody :
 kody = lista['Kod pocztowy'].unique().tolist()
 
+def dopasuj_kody_pocztowe(df, kolumna_kodu, lista_kodow):
+    # Tworzymy zbiór, aby przechowywać już użyte kody
+    wykorzystane_kody = set()
+    
+    # Funkcja pomocnicza do dopasowania kodu
+    def znajdz_podobny_kod(kod):
+        # Pobieramy pierwsze trzy cyfry kodu
+        prefix = kod[:4]
+        # Przeglądamy listę dostępnych kodów
+        for kod_z_listy in kody:
+            # Sprawdzamy, czy kod nie został już użyty i pasuje do prefiksu
+            if kod_z_listy.startswith(prefix) and kod_z_listy not in wykorzystane_kody:
+                # Dodajemy kod do wykorzystanych i zwracamy go
+                wykorzystane_kody.add(kod_z_listy)
+                return kod_z_listy
+        # Jeśli nie znaleziono żadnego pasującego kodu
+        return None
+
+    # Tworzymy nową kolumnę w df z dopasowanymi kodami
+    df['dopasowany_kod'] = df[kolumna_kodu].apply(znajdz_podobny_kod)
+    
+    return df
+
+# Użycie funkcji do dopasowania kodów pocztowych
+df_dopasowany = dopasuj_kody_pocztowe(df1, 'Kod_pocztowy', kody)
+df_dopasowany
 
 
 
