@@ -82,6 +82,8 @@ df2 = df2.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', '
 # Usuwamy duplikaty, pozostawiając tylko pierwsze dopasowanie
 df2 = df2.drop_duplicates(subset=['Kod pocztowy_df2'])
 
+df2
+
 #2 ETAP CYRKU
 
 df2_1 = df2[df2['Kod pocztowy_lista'].isna()]
