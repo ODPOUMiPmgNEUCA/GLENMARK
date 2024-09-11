@@ -70,7 +70,7 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
-kody = lista['Kod pocztowy].unique().tolist()
+kody = lista['Kod pocztowy'].unique().tolist()
 kody
 
 
