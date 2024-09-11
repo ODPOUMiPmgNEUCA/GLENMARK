@@ -48,7 +48,7 @@ if df:
     st.write(df.head())
     
     
-lista = pd.read_excel('Lista aptek Glenmark.xlsx')
+lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
 df = df[df['Rodzaj promocji'] =='IPRA']
 df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
