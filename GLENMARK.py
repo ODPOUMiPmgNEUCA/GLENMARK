@@ -70,8 +70,14 @@ df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulic
 df1
 
 
+# Usuwanie z listy aptek, które są w df1 :
+merged = pd.merge(lista, df1, on=['Kod pocztowy', 'Nazwa apteki'], how='left', indicator=True)
+lista1 = merged[merged['_merge'] == 'left_only'].drop(columns='_merge')
+st.write(Nowa lista)
+lista1
 
-
+len(lista)
+len(lista1)
 
 
 
