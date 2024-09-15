@@ -106,7 +106,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
 
 
 # Użycie funkcji do dopasowania kodów pocztowych
-df_dopasowany = dopasuj_inny_kod_pocztowy(df2, 'Kod_pocztowy', kody)
+df_dopasowany = dopasuj_inny_kod_pocztowy(df1, 'Kod_pocztowy', kody)
 df_dopasowany
 
 st.write('Liczba kodów pocztowych w liście :')
