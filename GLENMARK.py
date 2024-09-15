@@ -128,7 +128,6 @@ liczba_duplikatow = (df_dopasowany['dopasowany_kod'] == df_dopasowany['Kod poczt
 st.write('Liczba kodów z raportu, które mają dopasowany identyczny kod :')
 liczba_duplikatow
 
-df2
 st.write('Liczba wszystkich wierszy :')
 st.write(len(df_dopasowany))
 st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście apteki, która ma taki kod :')
