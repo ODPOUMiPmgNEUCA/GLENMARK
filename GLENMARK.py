@@ -106,7 +106,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
 
 
 # Użycie funkcji do dopasowania kodów pocztowych
-df_dopasowany = dopasuj_inny_kod_pocztowy(df1, 'Kod_pocztowy', kody)
+df_dopasowany = dopasuj_inny_kod_pocztowy(df2, 'Kod_pocztowy', kody)
 df_dopasowany
 
 st.write('Liczba kodów pocztowych w liście :')
@@ -122,11 +122,9 @@ st.write('Liczba kodów z raportu, które mają dopasowany identyczny kod :')
 liczba_duplikatow
 
 
-df_dopasowany = df_dopasowany.merge(lista, left_on='dopasowany_kod', right_on='Kod pocztowy', suffixes=('', '_dopasowany'))
+df_dopasowany = df_dopasowany.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left')
 df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
 df_dopasowany
-
-
 
 
 
