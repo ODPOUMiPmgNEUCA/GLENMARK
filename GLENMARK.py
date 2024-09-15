@@ -62,7 +62,7 @@ st.write('Podgląd danych z raportu posortowanych po ilości i wartości sprzeda
 df1
 
 # Wszystkie dostępne kody :
-kody = df['Kod pocztowy'].unique().tolist()
+kody = lista['Kod pocztowy'].unique().tolist()
 
 def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
     # Tworzymy słownik, aby przechowywać liczbę użyć każdego kodu
