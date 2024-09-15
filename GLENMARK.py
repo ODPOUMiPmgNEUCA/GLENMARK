@@ -128,10 +128,11 @@ df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
 st.write('Kod pocztowy wraz z danymi apteki i danymi sprzedażowymi oraz dopasowany podobny kod poccztowy z danymi apteki :')
 df_dopasowany
 
-st.write('Liczba kodów pocztowych w raporcie :')
+st.write('Liczba wszystkich wierszy :')
 st.write(len(df_dopasowany))
-st.write('Liczba kodów, do których został dopasowany kod, ale nie ma w liście apteki, która ma taki kod :')
+st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście apteki, która ma taki kod :')
 st.write(df_dopasowany['Nazwa apteki_dopasowany'].isna().sum())
+
 
 
 
