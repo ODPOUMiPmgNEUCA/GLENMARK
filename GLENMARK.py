@@ -101,7 +101,7 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
 
 
 # Użycie funkcji do dopasowania kodów pocztowych
-df_dopasowany = dopasuj_inny_kod_pocztowy(df1, 'Kod_pocztowy', kody)
+df_dopasowany = dopasuj_inny_kod_pocztowy(df2, 'Kod_pocztowy', kody)
 
 df_dopasowany = df_dopasowany.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
                                    suffixes=('','_dopasowany'))
@@ -125,9 +125,9 @@ liczba_duplikatow
 st.write('Liczba wszystkich wierszy :')
 st.write(len(df_dopasowany))
 st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście danych apteki, która ma taki kod :')
-st.write(df_dopasowany['Nazwa apteki_dopasowany'].isna().sum())
+st.write(df_dopasowany['Nazwa apteki'].isna().sum())
 st.write('Procent dopasowania :')
-st.write(np.round((len(df_dopasowany)-df_dopasowany['Nazwa apteki_dopasowany'].isna().sum())/len(df_dopasowany) * 100,1),'%')
+st.write(np.round((len(df_dopasowany)-df_dopasowany['Nazwa apteki'].isna().sum())/len(df_dopasowany) * 100,1),'%')
 
 
 
