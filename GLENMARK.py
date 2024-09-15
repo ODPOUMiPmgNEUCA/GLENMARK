@@ -73,27 +73,26 @@ def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
         prefix_3 = kod[:4]
         prefix_2 = kod[:2]
         
-        # Próbujemy znaleźć kod pocztowy na podstawie trzech pierwszych cyfr
+        # Najpierw próbujemy dopasować kod na podstawie trzech pierwszych cyfr
         for kod_z_listy in kody:
-            if kod_z_listy.startswith(prefix_3) and kod_z_listy not in wykorzystane_kody and kod_z_listy != kod:
-                wykorzystane_kody.add(kod_z_listy)
-                return kod_z_listy
-        
-        # Jeśli nie uda się znaleźć na podstawie trzech cyfr, próbujemy z dwoma pierwszymi
-        for kod_z_listy in kody:
-            if kod_z_listy.startswith(prefix_2) and kod_z_listy not in wykorzystane_kody and kod_z_listy != kod:
-                wykorzystane_kody.add(kod_z_listy)
+            if kod_z_listy.startswith(prefix_3) and liczba_uzyc[kod_z_listy] == 0 and kod_z_listy != kod:
+                liczba_uzyc[kod_z_listy] += 1
                 return kod_z_listy
 
+        # Następnie próbujemy dopasować na podstawie dwóch pierwszych cyfr
+        for kod_z_listy in kody:
+            if kod_z_listy.startswith(prefix_2) and liczba_uzyc[kod_z_listy] == 0 and kod_z_listy != kod:
+                liczba_uzyc[kod_z_listy] += 1
+                return kod_z_listy
 
-        # Jeśli nie uda się znaleźć na podstawie powyższych warunków, dopasowujemy kod, który ma takie same dwie cyfry
+        # Jeżeli nie udało się znaleźć jeszcze dopasowania, dopasowujemy kod, który ma takie same dwie cyfry, ale pozwalamy na powtórzenia
         for kod_z_listy in kody:
             if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                liczba_uzyc[kod_z_listy] += 1
                 return kod_z_listy
 
         # Jeśli nie ma żadnego dopasowania, nie zwracamy nic
         return None
-
     # Tworzymy nową kolumnę w df z dopasowanymi kodami
     df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
     
