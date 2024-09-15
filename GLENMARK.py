@@ -110,10 +110,10 @@ st.write('Kod pocztowy wraz z danymi sprzedażowymi oraz dopasowany podobny kod 
 df_dopasowany
 
 
-st.write('Liczba kodów pocztowych w liście :')
-st.write(len(lista))
-st.write('Liczba kodów pocztowych w raporcie :')
-st.write(len(df1))
+st.write('Liczba unikatowych kodów pocztowych w liście :')
+st.write(lista['Kod pocztowy'].nunique())
+st.write('Liczba unikatowych kodów pocztowych w raporcie :')
+st.write(df['Kod pocztowy'].nunique())
 st.write('Liczba kodów z raportu, które nie mają dopasowanego kodu :')
 st.write(df_dopasowany['dopasowany_kod'].isna().sum())
 
