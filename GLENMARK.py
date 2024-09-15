@@ -35,6 +35,7 @@ df = st.file_uploader(
     )
 if df:
     df= pd.read_excel(df)
+    st.write('Podgląd danych z raportu :')
     st.write(df.head())
     
     
@@ -47,6 +48,7 @@ df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
     'Wartość sprzedaży': 'sum'
 }).reset_index()
 
+st.write('Podgląd danych z raportu posortowanych po ilości i wartości sprzedaży :')
 df
 
 df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
