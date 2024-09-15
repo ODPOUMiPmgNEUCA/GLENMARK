@@ -124,7 +124,7 @@ liczba_duplikatow
 
 st.write('Liczba wszystkich wierszy :')
 st.write(len(df_dopasowany))
-st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście apteki, która ma taki kod :')
+st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście danych apteki, która ma taki kod :')
 st.write(df_dopasowany['Nazwa apteki'].isna().sum())
 st.write('Procent dopasowania :')
 st.write(df_dopasowany['Nazwa apteki'].isna().sum()/len(df_dopasowany) * 100,'%')
