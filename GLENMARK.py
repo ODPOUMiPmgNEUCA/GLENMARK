@@ -107,6 +107,8 @@ if df_file:
         df1
 
         df_dopasowany.drop(columns=['Czy w liście','Kod pocztowy'], inplace=True)
+        df_dopasowany = df_dopasowany.rename(columns={'dopasowany_kod': 'Kod pocztowy'})
+        df_dopasowany = df_dopasowany[new_order]
         df_dopasowany
 
     except Exception as e:
