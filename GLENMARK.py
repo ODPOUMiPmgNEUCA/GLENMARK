@@ -120,7 +120,7 @@ if df_file:
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
         wynik
 
-        wynik['in_df'] = wynik['Kod pocztowy'].isin(df['Kod pocztowy'])
+        wynik['in_df'] = wynik['Kod pocztowy'].isin(lista['Kod pocztowy'])
         wynik
 
     except Exception as e:
