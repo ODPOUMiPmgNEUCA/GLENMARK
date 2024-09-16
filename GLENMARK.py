@@ -29,38 +29,13 @@ div[class*="stSelectbox"] label {
 </style>
 """
 
-# Wczytanie pliku z uploaderem
-df_file = st.file_uploader(
-    label="Wrzuć plik oryginalny raport od działu rozliczeń :"
-)
-
-# Sprawdzanie, czy użytkownik załadował plik
-if df_file:
-    try:
-        # Próbujemy załadować plik do DataFrame
-        df = pd.read_excel(df_file)
-        
-        # Sprawdzamy, czy kolumna 'Rodzaj promocji' istnieje
-        if 'Rodzaj promocji' in df.columns:
-            df = df[df['Rodzaj promocji'] == 'IPRA']
-            st.write(df)  # Wyświetlenie przefiltrowanych danych
-        else:
-            st.error("Kolumna 'Rodzaj promocji' nie istnieje w załadowanym pliku.")
-    except Exception as e:
-        st.error(f"Wystąpił błąd podczas wczytywania pliku: {e}")
-else:
-    st.warning("Proszę załadować plik.")
+df = st.file_uploader(
+        label = "Wrzuć plik oryginalny raport od działu rozliczeń :"
+    )
+if df:
+    df= pd.read_excel(df)
     
-# Ładowanie listy aptek, poza uploaderem, aby wykonać dalsze operacje
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-
-
-
-
-
-
-
-
 
 df = df[df['Rodzaj promocji'] =='IPRA']
 
