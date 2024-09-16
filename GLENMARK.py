@@ -136,7 +136,7 @@ if df_file:
 
         nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
         st.download_button(
-            label='Pobierz plik raportu :',
+            label='PLIK RAPORTU',
             data=excel_file,
             file_name = nazwa_pliku,
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
