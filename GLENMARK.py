@@ -133,5 +133,3 @@ st.write(np.round((len(df_dopasowany)-df_dopasowany['Nazwa apteki'].isna().sum()
 
 
 
-
-
