@@ -34,7 +34,7 @@ df = st.file_uploader(
         label = "Wrzuć plik oryginalny raport od działu rozliczeń"
     )
 if df:
-    df= pd.read_excel(df))
+    df= pd.read_excel(df)
     
     
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
