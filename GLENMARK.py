@@ -103,25 +103,6 @@ st.write('Kod pocztowy wraz z danymi sprzedażowymi oraz dopasowany podobny kod 
 df_dopasowany
 
 
-st.write('Liczba unikatowych kodów pocztowych w liście :')
-st.write(lista['Kod pocztowy'].nunique())
-st.write('Liczba unikatowych kodów pocztowych w raporcie :')
-st.write(df['Kod pocztowy'].nunique())
-st.write('Liczba kodów z raportu, które nie mają dopasowanego kodu :')
-st.write(df_dopasowany['dopasowany_kod'].isna().sum())
-
-
-liczba_duplikatow = (df_dopasowany['dopasowany_kod'] == df_dopasowany['Kod pocztowy']).sum()
-st.write('Liczba kodów z raportu, które mają dopasowany identyczny kod :')
-liczba_duplikatow
-
-st.write('Liczba wszystkich wierszy :')
-st.write(len(df_dopasowany))
-st.write('Liczba wierszy, w których został dopasowany kod, ale nie ma w liście danych apteki, która ma taki kod :')
-st.write(df_dopasowany['Nazwa apteki'].isna().sum())
-st.write('Procent dopasowania :')
-st.write(np.round((len(df_dopasowany)-df_dopasowany['Nazwa apteki'].isna().sum())/len(df_dopasowany) * 100,1),'%')
-
 
 
 
