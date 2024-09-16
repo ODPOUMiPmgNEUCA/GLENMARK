@@ -35,8 +35,10 @@ df_file = st.file_uploader(
 if df_file:
     try:
         df = pd.read_excel(df_file)
+        df
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
+        lista
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
