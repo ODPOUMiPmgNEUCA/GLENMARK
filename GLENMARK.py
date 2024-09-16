@@ -34,9 +34,7 @@ df = st.file_uploader(
         label = "Wrzuć plik oryginalny raport od działu rozliczeń"
     )
 if df:
-    df= pd.read_excel(df)
-    st.write('Podgląd danych z raportu :')
-    st.write(df.head())
+    df= pd.read_excel(df))
     
     
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
@@ -47,9 +45,6 @@ df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
     'Ilość sprzedana': 'sum',
     'Wartość sprzedaży': 'sum'
 }).reset_index()
-
-st.write('Podgląd danych z raportu posortowanych po ilości i wartości sprzedaży :')
-df
 
 df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
