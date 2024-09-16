@@ -7,3 +7,4 @@ protobuf
 XlsxWriter
 altair
 rapidfuzz
+datetime
