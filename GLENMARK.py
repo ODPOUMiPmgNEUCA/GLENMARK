@@ -119,8 +119,8 @@ if df_file:
 
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
       
-        wynik['Rok wystawienia'] = 2024
-        wynik['Miesiąc wystawienia'] = 09
+        wynik['Rok wystawienia'] = '2024'
+        wynik['Miesiąc wystawienia'] = '09'
         
         wynik
       
