@@ -29,12 +29,11 @@ div[class*="stSelectbox"] label {
 """
 
 df_file = st.file_uploader(
-    label="Wrzuć plik oryginalny raport od działu rozliczeń:"
+    label="Wrzuć plik oryginalny raport od działu rozliczeń :"
 )
 
 if df_file:
     try:
-        # Próba załadowania pliku i wykonania operacji na nim
         df = pd.read_excel(df_file)
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
@@ -104,9 +103,7 @@ if df_file:
 
 
     except Exception as e:
-        # Wyświetl przyjazny komunikat o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
-        # Opcjonalnie: Wyświetl szczegóły błędu w logach
         st.write(f"Błąd szczegółowy: {e}")
 
 
