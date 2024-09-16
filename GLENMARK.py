@@ -104,24 +104,24 @@ if df_file:
         df1
         df_dopasowany
 
-        st.write('Po przekształceniach :')
+        st.write('Tabela wynikowa :')
 
         new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
+        new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
       
         df1.drop(columns='Czy w liście', inplace=True)
         df1 = df1[new_order]
-        df1
 
         df_dopasowany.drop(columns=['Czy w liście','Kod pocztowy'], inplace=True)
         df_dopasowany = df_dopasowany.rename(columns={'dopasowany_kod': 'Kod pocztowy'})
         df_dopasowany = df_dopasowany[new_order]
-        df_dopasowany
 
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
       
         wynik['Rok wystawienia'] = '2024'
         wynik['Miesiąc wystawienia'] = '09'
         
+        wynik = wynik[new_order_]
         wynik
       
     except Exception as e:
