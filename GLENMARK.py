@@ -101,12 +101,6 @@ if df_file:
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
 
 
-        st.write('Po dopasowaniu :')
-        df1
-        df_dopasowany
-
-        st.write('Tabela wynikowa :')
-
         new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
       
@@ -123,7 +117,6 @@ if df_file:
         wynik['Miesiąc wystawienia'] = '09'
         
         wynik = wynik[new_order_]
-        wynik
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
