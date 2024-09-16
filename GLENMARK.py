@@ -118,10 +118,18 @@ if df_file:
         df_dopasowany
 
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
-        wynik
+      
+        rok = 2024
+        miesiac = 09
+      
+        for col in 'Rok wystawienia':
+            wynik[col] = rok
 
+        for col in 'Miesiąc wystawienia':
+            wynik[col] = miesiac
         
-
+        wynik
+      
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
         st.write(f"Błąd szczegółowy: {e}")
