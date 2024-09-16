@@ -128,7 +128,7 @@ if df_file:
         st.write('Kliknij, aby pobrać plik z raportem :')
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            result.to_excel(writer, index=False, sheet_name='Sheet1')
+            wynik.to_excel(writer, index=False, sheet_name='Sheet1')
         excel_file1.seek(0) 
 
         nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
