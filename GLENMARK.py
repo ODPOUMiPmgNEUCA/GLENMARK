@@ -129,7 +129,7 @@ if df_file:
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
             wynik.to_excel(writer, index=False, sheet_name='Sheet1')
-        excel_file1.seek(0) 
+        excel_file.seek(0) 
 
         nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
         st.download_button(
