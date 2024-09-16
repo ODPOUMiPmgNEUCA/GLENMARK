@@ -120,6 +120,9 @@ if df_file:
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
         wynik
 
+        wynik['in_df'] = wynik['Kod pocztowy'].isin(df['Kod pocztowy'])
+        wynik
+
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
         st.write(f"Błąd szczegółowy: {e}")
