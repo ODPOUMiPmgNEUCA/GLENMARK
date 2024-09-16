@@ -123,6 +123,10 @@ if df_file:
         
         wynik = wynik[new_order_]
         wynik
+
+        st.write(len(df1))
+        st.write(len(df_dopasowany))
+        st.write(len(wynik))
       
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
