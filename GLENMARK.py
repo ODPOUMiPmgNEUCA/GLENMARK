@@ -52,7 +52,6 @@ if df_file:
         df2 = df[df['Czy w liście'] == False]
 
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-        df1
 
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
@@ -99,11 +98,14 @@ if df_file:
         df_dopasowany = df_dopasowany.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
                                    suffixes=('','_dopasowany'))
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
+        
+
+        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
+        df1.drop(columns='Czy w liście', inplace=True)
+        df1 = df1[new_order]
+        df1
+
         df_dopasowany
-
-        df_ostatnia = pd.concat([df1, df_dopasowany], ignore_index=True)
-        df_ostatnia
-
 
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
