@@ -124,8 +124,21 @@ if df_file:
         wynik = wynik[new_order_]
         wynik
 
-        
-      
+
+        st.write('Kliknij, aby pobrać plik z raportem :')
+        excel_file = io.BytesIO()
+        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+            result.to_excel(writer, index=False, sheet_name='Sheet1')
+        excel_file1.seek(0) 
+
+        nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
+        st.download_button(
+            label='Pobierz plik raportu :',
+            data=excel_file,
+            file_name = nazwa_pliku,
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+         )
+
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
         st.write(f"Błąd szczegółowy: {e}")
