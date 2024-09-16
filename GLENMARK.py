@@ -28,11 +28,27 @@ div[class*="stSelectbox"] label {
 </style>
 """
 
-df = st.file_uploader(
-        label = "Wrzuć plik oryginalny raport od działu rozliczeń :"
-    )
-if df:
-    df= pd.read_excel(df)
+df_file = st.file_uploader("Wrzuć plik oryginalny raport od działu rozliczeń:")
+
+# Sprawdzanie, czy użytkownik załadował plik
+if df_file is not None:
+    try:
+        # Próba załadowania pliku
+        df = pd.read_excel(df_file)
+
+        # Sprawdzenie, czy kolumna istnieje
+        if 'Rodzaj promocji' in df.columns:
+            df_filtered = df[df['Rodzaj promocji'] == 'IPRA']
+            st.write(df_filtered)  # Wyświetlenie przefiltrowanych danych
+        else:
+            st.error("Kolumna 'Rodzaj promocji' nie istnieje w pliku.")
+    except ValueError:
+        st.error("Nieprawidłowy format pliku. Proszę załadować plik Excel.")
+    except Exception as e:
+        # Własny, bezpieczny komunikat o błędzie bez śladu stosu
+        st.error("Wystąpił nieoczekiwany błąd. Skontaktuj się z administratorem.")
+else:
+    st.info("Proszę załadować plik, aby kontynuować.")
 
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
