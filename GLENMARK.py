@@ -14,7 +14,6 @@ from rapidfuzz import process, fuzz
 
 
 st.set_page_config(page_title='GLENMARK', layout='wide')
-st.set_option('client.showErrorDetails', False)
 
 tabs_font_css = """
 <style>
