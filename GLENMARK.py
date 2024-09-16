@@ -35,10 +35,8 @@ df_file = st.file_uploader(
 if df_file:
     try:
         df = pd.read_excel(df_file)
-        df
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-        lista
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
@@ -102,6 +100,9 @@ if df_file:
                                    suffixes=('','_dopasowany'))
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
         df_dopasowany
+
+        df_ostatnia = pd.concat([df1, df_dopasowany], ignore_index=True)
+        df_ostatnia
 
 
     except Exception as e:
