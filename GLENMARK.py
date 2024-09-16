@@ -31,7 +31,7 @@ div[class*="stSelectbox"] label {
 
 
 df = st.file_uploader(
-        label = "Wrzuć plik oryginalny raport od działu rozliczeń"
+        label = "Wrzuć plik oryginalny raport od działu rozliczeń :"
     )
 if df:
     df= pd.read_excel(df)
