@@ -54,8 +54,6 @@ df2 = df[df['Czy w liście'] == False]
 df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
 df1
 
-df2
-
 # Wszystkie dostępne kody :
 kody = lista['Kod pocztowy'].unique().tolist()
 
