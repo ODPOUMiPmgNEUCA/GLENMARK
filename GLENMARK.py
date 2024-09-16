@@ -58,11 +58,11 @@ df1 = df[df['Czy w liście'] == True]
 df2 = df[df['Czy w liście'] == False]
 
 df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-st.write('Podgląd danych z raportu posortowanych po ilości i wartości sprzedaży z uwzględnieniem kodów pocztowych znajdujących się w liście aptek:')
+st.write('Podgląd danych z raportu posortowanych po ilości i wartości sprzedaży z uwzględnieniem kodów pocztowych znajdujących się w liście aptek :')
 df1
 
 # Wszystkie dostępne kody :
-kody = df['Kod pocztowy'].unique().tolist()
+kody = lista['Kod pocztowy'].unique().tolist()
 
 def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
     # Tworzymy słownik, aby przechowywać liczbę użyć każdego kodu
