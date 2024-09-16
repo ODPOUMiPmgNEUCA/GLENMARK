@@ -101,10 +101,12 @@ if df_file:
         
 
         new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
+      
         df1.drop(columns='Czy w liście', inplace=True)
         df1 = df1[new_order]
         df1
 
+        df_dopasowany.drop(columns=['Czy w liście','Kod pocztowy'], inplace=True)
         df_dopasowany
 
     except Exception as e:
