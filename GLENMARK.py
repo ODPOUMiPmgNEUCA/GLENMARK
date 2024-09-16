@@ -124,7 +124,9 @@ if df_file:
         wynik = wynik[new_order_]
         wynik
 
-
+        # Zapisywanie raportu : 
+        dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
+          
         st.write('Kliknij, aby pobrać plik z raportem :')
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
