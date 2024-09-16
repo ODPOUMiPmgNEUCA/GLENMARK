@@ -117,7 +117,8 @@ if df_file:
         df_dopasowany = df_dopasowany[new_order]
         df_dopasowany
 
-        pd.concat([df1, df_dopasowany], ignore_index=True)
+        wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
+        wynik
 
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
