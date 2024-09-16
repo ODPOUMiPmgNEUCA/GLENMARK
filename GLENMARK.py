@@ -98,7 +98,13 @@ if df_file:
         df_dopasowany = df_dopasowany.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
                                    suffixes=('','_dopasowany'))
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
-        
+
+
+        st.write('Po dopasowaniu :')
+        df1
+        df_dopasowany
+
+        st.write('Po przekształceniach :')
 
         new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana']
       
