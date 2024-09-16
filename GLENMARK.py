@@ -28,37 +28,47 @@ div[class*="stSelectbox"] label {
 </style>
 """
 
-def safe_file_upload():
-    df_file = st.file_uploader("Wrzuć plik oryginalny raport od działu rozliczeń:")
+def load_file():
+    try:
+        # Wybór pliku do załadowania
+        df_file = st.file_uploader("Wrzuć plik oryginalny raport od działu rozliczeń:")
 
-    # Sprawdzenie, czy użytkownik załadował plik
-    if df_file is not None:
-        try:
-            # Próba załadowania pliku Excel
-            df = pd.read_excel(df_file)
+        # Sprawdzenie, czy plik został załadowany
+        if df_file is not None:
+            try:
+                # Próba załadowania pliku Excel
+                df = pd.read_excel(df_file)
 
-            # Sprawdzenie, czy kolumna 'Rodzaj promocji' istnieje w pliku
-            if 'Rodzaj promocji' in df.columns:
-                # Filtracja danych
-                df_filtered = df[df['Rodzaj promocji'] == 'IPRA']
-                st.write(df_filtered)
-            else:
-                # Komunikat o błędzie, jeśli brak odpowiedniej kolumny
-                st.error("Kolumna 'Rodzaj promocji' nie istnieje w załadowanym pliku.")
+                # Sprawdzenie, czy kolumna 'Rodzaj promocji' istnieje w pliku
+                if 'Rodzaj promocji' in df.columns:
+                    # Filtracja danych
+                    df_filtered = df[df['Rodzaj promocji'] == 'IPRA']
+                    st.write(df_filtered)
+                else:
+                    # Komunikat o błędzie, jeśli kolumna nie istnieje
+                    st.error("Kolumna 'Rodzaj promocji' nie istnieje w załadowanym pliku.")
+                    st.stop()  # Zatrzymanie skryptu
+
+            except ValueError:
+                # Obsługa błędów związanych z nieprawidłowym formatem pliku
+                st.error("Nieprawidłowy format pliku. Proszę załadować plik Excel.")
+                st.stop()  # Zatrzymanie skryptu
+            
+            except Exception as e:
+                # Ogólny wyjątek na wypadek innych błędów
+                st.error("Wystąpił błąd podczas przetwarzania pliku.")
+                st.stop()  # Zatrzymanie skryptu
         
-        except ValueError:
-            # Obsługa błędów związanych z nieprawidłowym formatem pliku
-            st.error("Nieprawidłowy format pliku. Proszę załadować plik Excel.")
-        
-        except Exception as e:
-            # Obsługa ogólnego błędu, bez wyświetlania śladów stosu
-            st.error("Wystąpił błąd podczas przetwarzania pliku.")
-            st.stop()  # Zatrzymaj wykonanie kodu, aby uniknąć wyświetlania śladów stosu
-    else:
-        st.info("Proszę załadować plik, aby kontynuować.")
+        else:
+            st.info("Proszę załadować plik, aby kontynuować.")
+
+    except Exception as e:
+        # Globalny wyjątek na wypadek problemów
+        st.error("Wystąpił krytyczny błąd. Skontaktuj się z administratorem.")
+        st.stop()  # Zatrzymanie skryptu
 
 # Wywołanie funkcji
-safe_file_upload()
+load_file()
 
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
