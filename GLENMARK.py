@@ -120,7 +120,7 @@ if df_file:
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
       
         rok = 2024
-        miesiac = 09
+        miesiac = 9
       
         for col in 'Rok wystawienia':
             wynik[col] = rok
