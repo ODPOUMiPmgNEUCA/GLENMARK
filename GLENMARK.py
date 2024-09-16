@@ -28,47 +28,12 @@ div[class*="stSelectbox"] label {
 </style>
 """
 
-def load_file():
-    try:
-        # Wybór pliku do załadowania
-        df_file = st.file_uploader("Wrzuć plik oryginalny raport od działu rozliczeń:")
+df = st.file_uploader(
+        label = "Wrzuć plik oryginalny raport od działu rozliczeń :"
+    )
+if df:
+    df= pd.read_excel(df)
 
-        # Sprawdzenie, czy plik został załadowany
-        if df_file is not None:
-            try:
-                # Próba załadowania pliku Excel
-                df = pd.read_excel(df_file)
-
-                # Sprawdzenie, czy kolumna 'Rodzaj promocji' istnieje w pliku
-                if 'Rodzaj promocji' in df.columns:
-                    # Filtracja danych
-                    df_filtered = df[df['Rodzaj promocji'] == 'IPRA']
-                    st.write(df_filtered)
-                else:
-                    # Komunikat o błędzie, jeśli kolumna nie istnieje
-                    st.error("Kolumna 'Rodzaj promocji' nie istnieje w załadowanym pliku.")
-                    st.stop()  # Zatrzymanie skryptu
-
-            except ValueError:
-                # Obsługa błędów związanych z nieprawidłowym formatem pliku
-                st.error("Nieprawidłowy format pliku. Proszę załadować plik Excel.")
-                st.stop()  # Zatrzymanie skryptu
-            
-            except Exception as e:
-                # Ogólny wyjątek na wypadek innych błędów
-                st.error("Wystąpił błąd podczas przetwarzania pliku.")
-                st.stop()  # Zatrzymanie skryptu
-        
-        else:
-            st.info("Proszę załadować plik, aby kontynuować.")
-
-    except Exception as e:
-        # Globalny wyjątek na wypadek problemów
-        st.error("Wystąpił krytyczny błąd. Skontaktuj się z administratorem.")
-        st.stop()  # Zatrzymanie skryptu
-
-# Wywołanie funkcji
-load_file()
 
 lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
