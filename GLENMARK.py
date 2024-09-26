@@ -75,6 +75,7 @@ if df_file:
         st.write('Suma ilości: ',t1)
         l1 = len(df1)
         st.write('Liczba wierszy: ',l1)
+        df1.loc[df1['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
