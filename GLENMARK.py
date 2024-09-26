@@ -54,11 +54,12 @@ if df_file:
         df2 = df[df['Czy w liście'] == False]
 
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-        df1
-        df2
 
         t = df['Ilość sprzedana'].sum()
         st.write(t)
+        t1 = df1['Ilość sprzeddana'].sum()
+        t2 = df2['Ilość sprzedana'].sum()
+        st.write(t1,t2)
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
