@@ -48,22 +48,22 @@ if df_file:
 
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
         df
+        t = df['Ilość sprzedana'].sum()
+        st.write(t)
 
         df1 = df[df['Czy w liście'] == True]
+        df1
         tt = df1['Ilość sprzedana'].sum()
         st.write(tt)
-        df1
+        
 
         df2 = df[df['Czy w liście'] == False]
 
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-
-        t = df['Ilość sprzedana'].sum()
-        st.write(t)
-        t1 = df1['Ilość sprzedana'].sum()
-        t2 = df2['Ilość sprzedana'].sum()
-        st.write(t1,t2)
         df1
+        
+        t1 = df1['Ilość sprzedana'].sum()
+        st.write(t1)
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
