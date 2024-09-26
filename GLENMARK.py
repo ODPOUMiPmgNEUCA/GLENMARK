@@ -59,7 +59,8 @@ if df_file:
         st.write(t)
         t1 = df1['Ilość sprzeddana'].sum()
         t2 = df2['Ilość sprzedana'].sum()
-        st.write(t1,t2)
+        st.write(t1)
+        st.write(t2)
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
