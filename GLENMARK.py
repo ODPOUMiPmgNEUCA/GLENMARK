@@ -38,42 +38,43 @@ if df_file:
         df = pd.read_excel(df_file)
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
+        st.write('Lista aptek Glenmark')
         lista
-        s = lista['SAP'].nunique()
-        d = len(lista)
-        st.write('Liczba unikalnych kodów SAP :',s)
-        st.write('Liczba wierszy w liście :',d)
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
-        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+        df = df.groupby(['Kod pocztowy', 'Indeks', 'SAP', 'Nazwa towaru']).agg({
                         'Ilość sprzedana': 'sum',
                         'Wartość sprzedaży': 'sum'
                         }).reset_index()
 
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        st.write('Raport z działu rozliczeń')
         df
+      
         t = df['Ilość sprzedana'].sum()
-        st.write('Suma ilości:',t)
-        
+        st.write('Suma ilości: ',t)
 
         df1 = df[df['Czy w liście'] == True]
+        st.write('Kody, które są na liście (przed dodaniem danych aptek)')
         df1
+      
         tt = df1['Ilość sprzedana'].sum()
-        st.write(tt)
+        st.write('Suma ilości: ',tt)
         ll = len(df1)
-        st.write(ll)
-        
+        st.write('Liczba wierszy: ',ll)
 
         df2 = df[df['Czy w liście'] == False]
 
+        # Możliwe, że ten krok psuje, bo kody pocztowe nie są unikalne, więc dopasowanie po nich może być niewłaściwe (może lepiej po SAP).
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
+        st.write('Kody, które są na liście (po dodaniu danych aptek)')
         df1
         
         t1 = df1['Ilość sprzedana'].sum()
-        st.write(t1)
+        st.write('Suma ilości: ',t1)
         l1 = len(df1)
-        st.write(l1)
+        st.write('Liczba wierszy: ',l1)
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
