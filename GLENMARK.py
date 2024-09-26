@@ -43,7 +43,7 @@ if df_file:
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
-        df = df.groupby(['Kod pocztowy', 'Indeks', 'SAP', 'Nazwa towaru']).agg({
+        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
                         'Ilość sprzedana': 'sum',
                         'Wartość sprzedaży': 'sum'
                         }).reset_index()
