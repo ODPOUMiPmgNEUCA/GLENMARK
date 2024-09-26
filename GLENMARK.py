@@ -55,6 +55,7 @@ if df_file:
 
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
         df1
+        df2
 
         s1 = df.groupby['Ilość sprzedana'].sum()
         st.write(s1)
