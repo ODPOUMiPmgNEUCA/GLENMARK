@@ -52,6 +52,7 @@ if df_file:
         df1 = df[df['Czy w liście'] == True]
         tt = df1['Ilość sprzedana'].sum()
         st.write(tt)
+        df1
 
         df2 = df[df['Czy w liście'] == False]
 
@@ -62,6 +63,7 @@ if df_file:
         t1 = df1['Ilość sprzedana'].sum()
         t2 = df2['Ilość sprzedana'].sum()
         st.write(t1,t2)
+        df1
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
