@@ -42,6 +42,7 @@ if df_file:
         lista
 
         df = df[df['Rodzaj promocji'] =='IPRA']
+        df
 
         df = df.groupby(['Indeks', 'Nazwa towaru']).agg({
                         'Ilość sprzedana': 'sum',
