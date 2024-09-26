@@ -38,6 +38,7 @@ if df_file:
         df = pd.read_excel(df_file)
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
+        lista
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
