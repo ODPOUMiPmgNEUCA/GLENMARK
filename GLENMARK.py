@@ -47,12 +47,14 @@ if df_file:
                         }).reset_index()
 
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        df
 
         df1 = df[df['Czy w liście'] == True]
 
         df2 = df[df['Czy w liście'] == False]
 
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
+        df1
 
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
