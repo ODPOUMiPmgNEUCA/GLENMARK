@@ -63,6 +63,7 @@ if df_file:
         st.write('Suma ilości: ',tt)
         ll = len(df1)
         st.write('Liczba wierszy: ',ll)
+        df1.loc[df1['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
 
         df2 = df[df['Czy w liście'] == False]
 
