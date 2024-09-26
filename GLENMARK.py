@@ -50,6 +50,8 @@ if df_file:
         df
 
         df1 = df[df['Czy w liście'] == True]
+        tt = df1['Ilość sprzedana'].sum()
+        st.write(tt)
 
         df2 = df[df['Czy w liście'] == False]
 
