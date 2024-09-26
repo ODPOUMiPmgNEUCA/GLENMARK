@@ -39,6 +39,10 @@ if df_file:
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
         lista
+        s = lista['SAP'].nunique()
+        d = len(lista)
+        st.write('Liczba unikalnych kodów SAP :',s)
+        st.write('Liczba wierszy w liście :',d)
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
@@ -50,7 +54,8 @@ if df_file:
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
         df
         t = df['Ilość sprzedana'].sum()
-        st.write(t)
+        st.write('Suma ilości:',t)
+        
 
         df1 = df[df['Czy w liście'] == True]
         df1
