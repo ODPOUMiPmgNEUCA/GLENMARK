@@ -43,7 +43,7 @@ if df_file:
 
         df = df[df['Rodzaj promocji'] =='IPRA']
         df
-        df.loc[df1['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
+        df.loc[df['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
 
         df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
                         'Ilość sprzedana': 'sum',
