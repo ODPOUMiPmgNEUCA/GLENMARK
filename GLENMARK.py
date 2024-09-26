@@ -56,6 +56,13 @@ if df_file:
         df1 = df1.merge(lista[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
         df1
 
+        s1 = df.groupby['Ilość sprzedana'].sum()
+        st.write(s1)
+        s2 = df1.groupby['Ilość sprzedana'].sum()
+        st.write(s2)
+        s3 = df2.groupby['Ilość sprzedana'].sum()
+        st.write(s3)
+
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
 
