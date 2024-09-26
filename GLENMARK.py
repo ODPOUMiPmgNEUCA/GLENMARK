@@ -57,8 +57,9 @@ if df_file:
         df1
         df2
 
-        df['Ilość sprzedana'].sum()
-        
+        t = df['Ilość sprzedana'].sum()
+        st.write(t)
+      
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
 
