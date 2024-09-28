@@ -123,7 +123,7 @@ if df_file:
         # Użycie funkcji do dopasowania kodów pocztowych
         df_dopasowany = dopasuj_inny_kod_pocztowy(df2, 'Kod_pocztowy', kody)
 
-        df_dopasowany = df_dopasowany.merge(lista[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
+        df_dopasowany = df_dopasowany.merge(lista-unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
                                    suffixes=('','_dopasowany'))
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
 
