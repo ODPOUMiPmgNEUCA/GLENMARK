@@ -38,12 +38,8 @@ if df_file:
         df = pd.read_excel(df_file)
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-        st.write('Lista aptek Glenmark')
-        lista
 
         df = df[df['Rodzaj promocji'] =='IPRA']
-        df
-        df.loc[df['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
 
         df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
                         'Ilość sprzedana': 'sum',
@@ -51,35 +47,13 @@ if df_file:
                         }).reset_index()
 
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
-        st.write('Raport z działu rozliczeń')
-        df
-      
-        t = df['Ilość sprzedana'].sum()
-        st.write('Suma ilości: ',t)
 
         df1 = df[df['Czy w liście'] == True]
-        st.write('Kody, które są na liście (przed dodaniem danych aptek)')
-        df1
-      
-        tt = df1['Ilość sprzedana'].sum()
-        st.write('Suma ilości: ',tt)
-        ll = len(df1)
-        st.write('Liczba wierszy: ',ll)
-        df1.loc[df1['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
 
         df2 = df[df['Czy w liście'] == False]
 
-        # Możliwe, że ten krok psuje, bo kody pocztowe nie są unikalne, więc dopasowanie po nich może być niewłaściwe (można byłoby po SAP, ale go nie ma w raporcie).
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-        st.write('Kody, które są na liście (po dodaniu danych aptek)')
-        df1
-        
-        t1 = df1['Ilość sprzedana'].sum()
-        st.write('Suma ilości: ',t1)
-        l1 = len(df1)
-        st.write('Liczba wierszy: ',l1)
-        df1.loc[df1['Nazwa towaru'] == 'LACIDOFIL * 20 KAPS']
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
