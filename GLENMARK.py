@@ -145,7 +145,7 @@ if df_file:
         
         wynik = wynik[new_order_]
 
-        st.write(wynik.isna().any())
+        st.write(wynik.isna())
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
