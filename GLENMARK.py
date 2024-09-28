@@ -70,7 +70,7 @@ if df_file:
         df2 = df[df['Czy w liście'] == False]
 
         # Możliwe, że ten krok psuje, bo kody pocztowe nie są unikalne, więc dopasowanie po nich może być niewłaściwe (można byłoby po SAP, ale go nie ma w raporcie).
-        lista_unique = lista.drop_duplicatess(subset=['Kod pocztowy'])
+        lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
         st.write('Kody, które są na liście (po dodaniu danych aptek)')
         df1
