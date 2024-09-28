@@ -110,7 +110,12 @@ if df_file:
                 if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
                     liczba_uzyc[kod_z_listy] += 1
                     return kod_z_listy
-
+                  
+            # Jeśli nie ma żadnego dopasowania, zwracamy jakikolwiek kod
+            for kod_z_listy in kody:
+                if kod_z_listy != kod:
+                  liczba_uzyc[kod_z_listy] += 1
+                  return kod_z_listy
             
 
           # Tworzymy nową kolumnę w df z dopasowanymi kodami
