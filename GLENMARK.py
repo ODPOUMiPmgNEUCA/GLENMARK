@@ -111,8 +111,7 @@ if df_file:
                     liczba_uzyc[kod_z_listy] += 1
                     return kod_z_listy
 
-            # Jeśli nie ma żadnego dopasowania, nie zwracamy nic
-            return None
+            
 
           # Tworzymy nową kolumnę w df z dopasowanymi kodami
           df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
@@ -144,8 +143,6 @@ if df_file:
         wynik['Miesiąc wystawienia'] = '09'
         
         wynik = wynik[new_order_]
-
-        st.write(wynik.isna())
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
