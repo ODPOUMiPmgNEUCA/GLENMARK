@@ -141,7 +141,7 @@ if df_file:
          )
 
     except Exception as e:
-        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format.")
+        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
 
 
