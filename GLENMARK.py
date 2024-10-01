@@ -30,7 +30,7 @@ div[class*="stSelectbox"] label {
 """
 
 df_file = st.file_uploader(
-    label="Wrzuć plik oryginalny raport od działu rozliczeń :"
+    label="Wrzuć plik raportu od działu rozliczeń :"
 )
 
 if df_file:
