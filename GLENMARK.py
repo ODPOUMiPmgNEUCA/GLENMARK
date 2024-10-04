@@ -118,7 +118,7 @@ if df_file:
 
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
       
-        wynik['Rok wystawienia'] = '2024'
+        wynik['Rok wystawienia'] = datetime.now().year
         wynik['Miesiąc wystawienia'] = '09'
         
         wynik = wynik[new_order_]
