@@ -123,11 +123,6 @@ if df_file:
         wynik['Miesiąc wystawienia'] = datetime.datetime.now().month
         
         wynik = wynik[new_order_]
-        summary = wynik.groupby('Kod pocztowy').agg(
-            Suma_ilosci=('Ilość sprzedana', 'sum'),
-            Suma_wartosci=('Wartość sprzedaży', 'sum')
-        ).reset_index()
-        summary
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
@@ -197,13 +192,6 @@ if df_file:
                 df.at[index, 'Dopasowany kod'] = dopasuj_inny_kod_pocztowy(row['Kod pocztowy'], kody)
             else:
                 df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
-
-        # Oblicz sumy ilości i wartości sprzedaży
-        summary_ipra = df[df['Rodzaj promocji'] == 'IPRA'].groupby('Dopasowany kod').agg(
-            Suma_ilosci=('Ilość sprzedana', 'sum'),
-            Suma_wartosci=('Wartość sprzedaży', 'sum')
-        ).reset_index()
-        summary_ipra
 
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
