@@ -226,6 +226,9 @@ if df_file:
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
+        # Utwórz flagę, czy kod pocztowy jest na liście
+        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+
         # Unikalne kody z listy aptek
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         kody = lista_unique['Kod pocztowy'].unique().tolist()
