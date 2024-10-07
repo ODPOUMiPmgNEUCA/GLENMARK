@@ -126,6 +126,7 @@ if df_file:
         wynik['Miesiąc wystawienia'] = datetime.datetime.now().month
         
         wynik = wynik[new_order_]
+        wynik[wnik['Kod pocztowy']=='00-022']
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
