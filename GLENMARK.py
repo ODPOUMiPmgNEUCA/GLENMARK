@@ -198,14 +198,12 @@ if df_file:
             df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
             return df
 
-        # Dopasuj kody pocztowe tylko dla wierszy, których kodów nie ma na liście
-        df_dopasowany = dopasuj_inny_kod_pocztowy(df_poza_lista, 'Kod pocztowy', kody)
+        # Wybieramy tylko te wiersze, które mają Rodzaj promocji 'IPRA'
+        df_ipra = df[df['Rodzaj promocji'] == 'IPRA']
+        df_ipra = dopasuj_inny_kod_pocztowy(df_ipra, 'Kod pocztowy', kody)
 
-        # Sklej dwie części: te z oryginalnymi kodami oraz te z dopasowanymi kodami
-        wynik = pd.concat([df_w_liscie, df_dopasowany], ignore_index=True)
-
-        # Usuń kolumnę pomocniczą 'Czy w liście'
-        wynik = wynik.drop(columns=['Czy w liście'])
+        # Dodaj nową kolumnę z dopasowanymi kodami do oryginalnego DataFrame
+        df.loc[df['Rodzaj promocji'] == 'IPRA', 'Dopasowany kod'] = df_ipra['Dopasowany kod']
 
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
