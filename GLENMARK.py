@@ -263,9 +263,6 @@ if df_file:
             else:
                 df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
 
-        # Dodaj kolumny "Rok wystawienia" i "Miesiąc wystawienia"
-        df['Rok wystawienia'] = datetime.datetime.now().year
-        df['Miesiąc wystawienia'] = datetime.datetime.now().month
 
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
