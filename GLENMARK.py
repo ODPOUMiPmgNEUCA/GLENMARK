@@ -201,10 +201,6 @@ if df_file:
         # Dopasuj kody pocztowe tylko dla wierszy, których kodów nie ma na liście
         df_dopasowany = dopasuj_inny_kod_pocztowy(df_poza_lista, 'Kod pocztowy', kody)
 
-        # Połącz pierwotne dane z dopasowanymi kodami - zachowując oryginalne kolumny raportu
-        df_dopasowany['Kod pocztowy'] = df_dopasowany['dopasowany_kod']  # Podmień tylko kolumnę z kodem
-        df_dopasowany = df_dopasowany.drop(columns=['dopasowany_kod'])
-
         # Sklej dwie części: te z oryginalnymi kodami oraz te z dopasowanymi kodami
         wynik = pd.concat([df_w_liscie, df_dopasowany], ignore_index=True)
 
