@@ -126,7 +126,10 @@ if df_file:
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
-
+  except Exception as e:
+        # Obsługa błędów i wyświetlanie komunikatu o błędzie
+        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
+        st.write(f"Błąd szczegółowy: {e}")
 
 
 
