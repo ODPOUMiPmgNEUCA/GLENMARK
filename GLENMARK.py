@@ -51,10 +51,10 @@ if df_file:
         df1 = df[df['Czy w liście'] == True]
 
         df2 = df[df['Czy w liście'] == False]
-        df2
 
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
+        df[df['Kod pocztowy']=='00-022']
         
       
         # Wszystkie dostępne kody :
