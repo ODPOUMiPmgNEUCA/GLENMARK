@@ -50,24 +50,31 @@ if df_file:
         def dopasuj_inny_kod_pocztowy(kod, kody):
             prefix_3 = kod[:4]
             prefix_2 = kod[:2]
+            used_codes = set()  # Zbiór do przechowywania wykorzystanych kodów
 
             # Najpierw próbujemy dopasować kod na podstawie trzech pierwszych cyfr
             for kod_z_listy in kody:
-                if kod_z_listy.startswith(prefix_3) and kod_z_listy != kod:
-                    return kod_z_listy
+              if kod_z_listy.startswith(prefix_3) and kod_z_listy != kod:
+                used_codes.add(kod_z_listy)  # Dodaj kod do zbioru użytych
+                return kod_z_listy
 
             # Następnie próbujemy dopasować na podstawie dwóch pierwszych cyfr
             for kod_z_listy in kody:
-                if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
-                    return kod_z_listy
+              if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                used_codes.add(kod_z_listy)  # Dodaj kod do zbioru użytych
+                return kod_z_listy
 
-            # Jeżeli nie udało się znaleźć jeszcze dopasowania, dopasowujemy kod, który ma takie same dwie cyfry, ale pozwalamy na powtórzenia
+            # Jeśli nie znaleziono jeszcze dopasowania, spróbuj dopasować kod
             for kod_z_listy in kody:
-                if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
-                    return kod_z_listy
+              if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                used_codes.add(kod_z_listy)  # Dodaj kod do zbioru użytych
+                return kod_z_listy
 
-            # Jeśli nie ma żadnego dopasowania, zwracamy None
-            return None
+            # Jeśli nie ma żadnego dopasowania, zwracamy pierwszy dostępny kod, który nie został wykorzystany
+            for kod_z_listy in kody:
+              if kod_z_listy != kod and kod_z_listy not in used_codes:
+              return kod_z_listy
+
             
         # Utwórz kolumnę z dopasowanym kodem pocztowym
         df['Dopasowany kod'] = None
