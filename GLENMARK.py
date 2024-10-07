@@ -89,7 +89,7 @@ if df_file:
                         'Kod pocztowy_dopasowany'], inplace=True)
 
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
-                      'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
+                      'Dopasowany kod', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
         d['Rok wystawienia'] = datetime.datetime.now().year
         d['Miesiąc wystawienia'] = datetime.datetime.now().month
         
