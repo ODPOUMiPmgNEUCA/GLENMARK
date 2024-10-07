@@ -195,7 +195,7 @@ if df_file:
                         liczba_uzyc[kod_z_listy] += 1
                         return kod_z_listy
 
-            df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
+            df['Dopasowany kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
             return df
 
         # Wybieramy tylko te wiersze, które mają Rodzaj promocji 'IPRA'
