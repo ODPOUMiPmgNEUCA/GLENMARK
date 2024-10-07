@@ -67,12 +67,9 @@ if df_file:
                 if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
                     return kod_z_listy
 
-            # Jeśli nie ma żadnego dopasowania, zwracamy 
-            for kod_z_listy in kody:
-                if kod_z_listy != kod:
-                  liczba_uzyc[kod_z_listy] += 1
-                  return kod_z_listy
-
+            # Jeśli nie ma żadnego dopasowania, zwracamy None
+            return None
+            
         # Utwórz kolumnę z dopasowanym kodem pocztowym
         df['Dopasowany kod'] = None
         
