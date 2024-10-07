@@ -199,10 +199,6 @@ if df_file:
         # Dodaj nową kolumnę z dopasowanymi kodami do oryginalnego DataFrame
         df.loc[df['Rodzaj promocji'] == 'IPRA', 'Dopasowany kod'] = df_ipra['Dopasowany kod']
 
-        # Dodaj kolumny "Rok wystawienia" i "Miesiąc wystawienia"
-        df['Rok wystawienia'] = datetime.datetime.now().year
-        df['Miesiąc wystawienia'] = datetime.datetime.now().month
-
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
