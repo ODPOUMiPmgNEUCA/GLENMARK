@@ -149,27 +149,26 @@ if df_file:
 
 if df_file:
     try:
-        # Wczytanie raportu i listy aptek
+        # Załaduj plik główny oraz listę aptek
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        # Przefiltrowanie danych, gdzie "Rodzaj promocji" == "IPRA"
-        df_ipra = df[df['Rodzaj promocji'] == 'IPRA'].copy()
+        # Zostaw tylko te wiersze, które mają Rodzaj promocji == "IPRA"
+        df_ipra = df[df['Rodzaj promocji'] == 'IPRA']
 
-        # Sprawdzamy, czy kod pocztowy jest w liście aptek
+        # Utwórz flagę, czy kod pocztowy jest na liście
         df_ipra['Czy w liście'] = df_ipra['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
-        # Dzielimy dane na te, które są w liście i te, które nie są
-        df_in_list = df_ipra[df_ipra['Czy w liście'] == True]
-        df_not_in_list = df_ipra[df_ipra['Czy w liście'] == False]
+        # Podziel na dwie części: te, które są w liście, i te, których nie ma
+        df_w_liscie = df_ipra[df_ipra['Czy w liście'] == True]
+        df_poza_lista = df_ipra[df_ipra['Czy w liście'] == False]
 
-        # Lista unikalnych kodów pocztowych z listy aptek
+        # Unikalne kody z listy aptek
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
+        kody = lista_unique['Kod pocztowy'].unique().tolist()
 
-        # Funkcja do dopasowania podobnych kodów pocztowych
-        kody = lista['Kod pocztowy'].unique().tolist()
-
-        def dopasuj_inny_kod_pocztowy(df, kody):
+        # Funkcja do dopasowania podobnych kodów
+        def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
             liczba_uzyc = {kod: 0 for kod in kody}
 
             def znajdz_podobny_kod(kod):
@@ -197,56 +196,39 @@ if df_file:
                         return kod_z_listy
 
             df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
-
             return df
 
-        # Dopasowanie kodów dla wierszy, gdzie kod pocztowy nie znajduje się na liście
-        df_not_in_list = dopasuj_inny_kod_pocztowy(df_not_in_list, kody)
+        # Dopasuj kody pocztowe tylko dla wierszy, których kodów nie ma na liście
+        df_dopasowany = dopasuj_inny_kod_pocztowy(df_poza_lista, 'Kod pocztowy', kody)
 
-        # Łączenie dopasowanych kodów pocztowych z listą aptek
-        df_not_in_list = df_not_in_list.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], 
-                                              left_on='dopasowany_kod', 
-                                              right_on='Kod pocztowy', 
-                                              how='left', 
-                                              suffixes=('', '_dopasowany'))
+        # Połącz pierwotne dane z dopasowanymi kodami - zachowując oryginalne kolumny raportu
+        df_dopasowany['Kod pocztowy'] = df_dopasowany['dopasowany_kod']  # Podmień tylko kolumnę z kodem
+        df_dopasowany = df_dopasowany.drop(columns=['dopasowany_kod'])
 
-        df_not_in_list.drop(columns=['Kod pocztowy_dopasowany'], inplace=True)
+        # Sklej dwie części: te z oryginalnymi kodami oraz te z dopasowanymi kodami
+        wynik = pd.concat([df_w_liscie, df_dopasowany], ignore_index=True)
 
-        # Połączenie danych z oryginalnym raportem
-        df_in_list.drop(columns=['Czy w liście'], inplace=True)
-        df_not_in_list.drop(columns=['Czy w liście'], inplace=True)
+        # Usuń kolumnę pomocniczą 'Czy w liście'
+        wynik = wynik.drop(columns=['Czy w liście'])
 
-        # Upewnienie się, że kolumny są w tej samej kolejności
-        df_all = pd.concat([df_in_list, df_not_in_list], ignore_index=True)
-
-        # Dodanie nowych kolumn z dopasowanymi kodami
-        df['dopasowany_kod'] = None
-        df.update(df_all[['Kod pocztowy', 'dopasowany_kod']])
-
-        # Zapisanie nowego raportu do pliku Excel z zachowaniem wszystkich oryginalnych kolumn
-        dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
-
-        st.write('Kliknij, aby pobrać plik z raportem :')
+        # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
+            wynik.to_excel(writer, index=False, sheet_name='Sheet1')
         excel_file.seek(0)
 
-        nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
+        # Udostępnij plik do pobrania w aplikacji Streamlit
         st.download_button(
             label='PLIK RAPORTU NOWY',
             data=excel_file,
-            file_name=nazwa_pliku,
+            file_name=f"RAPORT GLENMARK_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
     except Exception as e:
+        # Obsługa błędów i wyświetlanie komunikatu o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
-
-
-
-
 
 
 
