@@ -146,38 +146,29 @@ if df_file:
         st.write(f"Błąd szczegółowy: {e}")
 
 #######################################################################
+
 if df_file:
     try:
-        # Wczytanie plików z raportem i listą
+        # Wczytanie raportu i listy aptek
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        # Przefiltrowanie danych tylko dla "Rodzaj promocji" == "IPRA"
-        df_ipra = df[df['Rodzaj promocji'] == 'IPRA'].copy()  # Używamy .copy() żeby pracować na kopii
+        # Przefiltrowanie danych, gdzie "Rodzaj promocji" == "IPRA"
+        df_ipra = df[df['Rodzaj promocji'] == 'IPRA'].copy()
 
-        # Sumowanie danych na podstawie kluczowych kolumn
-        df_ipra_suma = df_ipra.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
-            'Ilość sprzedana': 'sum',
-            'Wartość sprzedaży': 'sum'
-        }).reset_index()
+        # Sprawdzamy, czy kod pocztowy jest w liście aptek
+        df_ipra['Czy w liście'] = df_ipra['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
-        # Sprawdzenie, czy kod pocztowy znajduje się w liście aptek
-        df_ipra_suma['Czy w liście'] = df_ipra_suma['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        # Dzielimy dane na te, które są w liście i te, które nie są
+        df_in_list = df_ipra[df_ipra['Czy w liście'] == True]
+        df_not_in_list = df_ipra[df_ipra['Czy w liście'] == False]
 
-        # Rozdzielenie danych na te, które są w liście i te, które nie są
-        df1 = df_ipra_suma[df_ipra_suma['Czy w liście'] == True]
-        df2 = df_ipra_suma[df_ipra_suma['Czy w liście'] == False]
-
-        # Usuwanie duplikatów kodów pocztowych z listy
+        # Lista unikalnych kodów pocztowych z listy aptek
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
 
-        # Łączenie df1 z danymi aptek
-        df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-
-        # Lista dostępnych kodów pocztowych
+        # Funkcja do dopasowania podobnych kodów pocztowych
         kody = lista['Kod pocztowy'].unique().tolist()
 
-        # Definicja funkcji do dopasowania kodów
         def dopasuj_inny_kod_pocztowy(df, kody):
             liczba_uzyc = {kod: 0 for kod in kody}
 
@@ -209,47 +200,36 @@ if df_file:
 
             return df
 
-        # Dopasowanie kodów pocztowych do wierszy z df2
-        df_dopasowany = dopasuj_inny_kod_pocztowy(df2, kody)
+        # Dopasowanie kodów dla wierszy, gdzie kod pocztowy nie znajduje się na liście
+        df_not_in_list = dopasuj_inny_kod_pocztowy(df_not_in_list, kody)
 
-        # Łączenie df_dopasowany z listą aptek
-        df_dopasowany = df_dopasowany.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], 
-                                            left_on='dopasowany_kod', 
-                                            right_on='Kod pocztowy', 
-                                            how='left', 
-                                            suffixes=('', '_dopasowany'))
+        # Łączenie dopasowanych kodów pocztowych z listą aptek
+        df_not_in_list = df_not_in_list.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], 
+                                              left_on='dopasowany_kod', 
+                                              right_on='Kod pocztowy', 
+                                              how='left', 
+                                              suffixes=('', '_dopasowany'))
 
-        df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
+        df_not_in_list.drop(columns=['Kod pocztowy_dopasowany'], inplace=True)
 
-        # Tworzenie nowego porządku kolumn
-        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana', 'Wartość sprzedaży']
-        new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana', 'Wartość sprzedaży']
+        # Połączenie danych z oryginalnym raportem
+        df_in_list.drop(columns=['Czy w liście'], inplace=True)
+        df_not_in_list.drop(columns=['Czy w liście'], inplace=True)
 
-        # Usuwanie zbędnej kolumny 'Czy w liście' i porządkowanie kolumn
-        df1.drop(columns='Czy w liście', inplace=True)
-        df1 = df1[new_order]
+        # Upewnienie się, że kolumny są w tej samej kolejności
+        df_all = pd.concat([df_in_list, df_not_in_list], ignore_index=True)
 
-        df_dopasowany.drop(columns=['Czy w liście', 'Kod pocztowy'], inplace=True)
-        df_dopasowany = df_dopasowany.rename(columns={'dopasowany_kod': 'Kod pocztowy'})
-        df_dopasowany = df_dopasowany[new_order]
+        # Dodanie nowych kolumn z dopasowanymi kodami
+        df['dopasowany_kod'] = None
+        df.update(df_all[['Kod pocztowy', 'dopasowany_kod']])
 
-        # Łączenie obu DataFrame (z dopasowanymi i oryginalnymi kodami)
-        wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
-
-        # Dodanie kolumn z aktualnym rokiem i miesiącem
-        wynik['Rok wystawienia'] = datetime.datetime.now().year
-        wynik['Miesiąc wystawienia'] = datetime.datetime.now().month
-
-        # Końcowy wynik z nowym układem kolumn
-        wynik = wynik[new_order_]
-
-        # Zapisywanie raportu do pliku
+        # Zapisanie nowego raportu do pliku Excel z zachowaniem wszystkich oryginalnych kolumn
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
 
         st.write('Kliknij, aby pobrać plik z raportem :')
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            wynik.to_excel(writer, index=False, sheet_name='Sheet1')
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
         excel_file.seek(0)
 
         nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
@@ -263,8 +243,6 @@ if df_file:
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
-
-
 
 
 
