@@ -49,6 +49,7 @@ if df_file:
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
         df1 = df[df['Czy w liście'] == True]
+        df1
 
         df2 = df[df['Czy w liście'] == False]
         df2[df2['Kod pocztowy'=='00-022']]
