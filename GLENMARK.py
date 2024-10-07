@@ -34,16 +34,6 @@ df_file = st.file_uploader(
 )
 
 
-import pandas as pd
-import streamlit as st
-import datetime
-import io
-
-# Umożliwienie wczytania pliku
-df_file = st.file_uploader(
-    label="Wrzuć plik raportu od działu rozliczeń :"
-)
-
 if df_file:
     try:
         # Załaduj plik główny oraz listę aptek
