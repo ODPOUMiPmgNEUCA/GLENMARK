@@ -86,7 +86,7 @@ if df_file:
                                   suffixes=('', '_dopasowany'))
 
         # Przygotuj wynik do zapisu
-        df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'], inplace=True)
+        df_dopasowany.drop(columns=['Kod pocztowy_dopasowany', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu'], inplace=True)
         
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
