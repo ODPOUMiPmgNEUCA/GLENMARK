@@ -84,8 +84,31 @@ if df_file:
                                   left_on='Dopasowany kod', right_on='Kod pocztowy', how='left',
                                   suffixes=('', '_dopasowany'))
 
-        df_dopasowany[df_dopasowany['Rodzaj promocji']=='IPRA']
+        d = df_dopasowany[df_dopasowany['Rodzaj promocji']=='IPRA']
+        d.drop(columns=['ID promocji', 'Nazwa promocji', 'Kod pocztowy', 'Nazwa prod. sprzedaży', 'Rabat %', 'Rabat promocyjny', 'Rodzaj promocji', 'Czy w liście',
+                        'Kod pocztowy_dopasowany'], inplace=True)
 
+        new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
+                      'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
+        d['Rok wystawienia'] = datetime.datetime.now().year
+        d['Miesiąc wystawienia'] = datetime.datetime.now().month
+        
+        d = d[new_order_]
+
+        st.write('Kliknij, aby pobrać plik z raportem:')
+        excel_file = io.BytesIO()
+        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+            d.to_excel(writer, index=False, sheet_name='Sheet1')
+        excel_file.seek(0)
+
+        nazwa_pliku = f"RAPORT GLENMARK_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx"
+        st.download_button(
+            label='PLIK RAPORTU',
+            data=excel_file,
+            file_name=nazwa_pliku,
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+      
         # Przygotuj wynik do zapisu
         df_dopasowany.drop(columns=['Kod pocztowy_dopasowany', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu'], inplace=True)
         
@@ -97,66 +120,11 @@ if df_file:
 
         # Udostępnij plik do pobrania w aplikacji Streamlit
         st.download_button(
-            label='PLIK RAPORTU CENTRALNY (1)',
+            label='PLIK RAPORTU CENTRALNY',
             data=excel_file,
             file_name=f"RAPORT GLENMARK OSTATECZNY_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
-
-    except Exception as e:
-        # Obsługa błędów i wyświetlanie komunikatu o błędzie
-        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
-        st.write(f"Błąd szczegółowy: {e}")
-
-if df_file:
-    try:
-        df = pd.read_excel(df_file)
-        lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-
-        # Przetwarzanie danych
-        df = df[df['Rodzaj promocji'] == 'IPRA']
-        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
-            'Ilość sprzedana': 'sum',
-            'Wartość sprzedaży': 'sum'
-        }).reset_index()
-
-        # Zidentyfikuj, czy kody pocztowe są w liście
-        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
-
-        # Wydziel dane w liście
-        df1 = df[df['Czy w liście'] == True]
-        df2 = df[df['Czy w liście'] == False]
-
-        # Dodaj dane aptek dla df1
-        lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
-        df1 = df1.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
-                         on='Kod pocztowy', how='left')
-
-        # Przygotuj dane do eksportu
-        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana', 'Wartość sprzedaży']
-        df1 = df1[new_order]
-
-        # Zapisywanie raportu
-        dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
-
-        st.write('Kliknij, aby pobrać plik z raportem:')
-        excel_file = io.BytesIO()
-        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            df1.to_excel(writer, index=False, sheet_name='Sheet1')
-        excel_file.seek(0)
-
-        nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
-        st.download_button(
-            label='PLIK RAPORTU (1)',
-            data=excel_file,
-            file_name=nazwa_pliku,
-            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-
-    except Exception as e:
-        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
-        st.write(f"Błąd szczegółowy: {e}")
-
 
 
 
