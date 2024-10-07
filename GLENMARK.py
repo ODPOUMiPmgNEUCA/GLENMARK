@@ -49,14 +49,13 @@ if df_file:
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
         df1 = df[df['Czy w liście'] == True]
-        df1
 
         df2 = df[df['Czy w liście'] == False]
+        df2
 
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
-        d = df1[df1['Kod pocztowy'=='00-022']]
-        d
+        
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
