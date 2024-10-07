@@ -41,6 +41,11 @@ if df_file:
 
         df = df[df['Rodzaj promocji'] =='IPRA']
 
+        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+                        'Ilość sprzedana': 'sum',
+                        'Wartość sprzedaży': 'sum'
+                        }).reset_index()
+
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
         df1 = df[df['Czy w liście'] == True]
@@ -140,7 +145,7 @@ if df_file:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
 
-
+#######################################################################
 if df_file:
     try:
         df = pd.read_excel(df_file)
@@ -148,11 +153,6 @@ if df_file:
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
         df = df[df['Rodzaj promocji'] =='IPRA']
-
-        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
-                        'Ilość sprzedana': 'sum',
-                        'Wartość sprzedaży': 'sum'
-                        }).reset_index()
 
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
