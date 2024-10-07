@@ -33,6 +33,7 @@ df_file = st.file_uploader(
     label="Wrzuć plik raportu od działu rozliczeń :"
 )
 
+"""""
 if df_file:
     try:
         df = pd.read_excel(df_file)
@@ -216,99 +217,138 @@ if df_file:
         # Obsługa błędów i wyświetlanie komunikatu o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
+""""
 
-##############################################################################
-st.write('NOWOŚĆ')
+df_file = st.file_uploader(
+    label="Wrzuć plik raportu od działu rozliczeń :"
+)
+
 if df_file:
     try:
         # Załaduj plik główny oraz listę aptek
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        # Filtrujemy tylko wiersze z promocją 'IPRA'
-        df_ipra = df[df['Rodzaj promocji'] == 'IPRA']
+        # Utwórz flagę, czy kod pocztowy jest na liście
+        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
-        # Grupa danych według kodu pocztowego, indeksu i nazwy towaru
-        df_ipra_grouped = df_ipra.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
-            'Ilość sprzedana': 'sum',
-            'Wartość sprzedaży': 'sum'
-        }).reset_index()
-
-        # Sprawdzamy, czy kody pocztowe są w liście aptek
-        df_ipra_grouped['Czy w liście'] = df_ipra_grouped['Kod pocztowy'].isin(lista['Kod pocztowy'])
-
-        # Zbieramy unikalne kody pocztowe
+        # Unikalne kody z listy aptek
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         kody = lista_unique['Kod pocztowy'].unique().tolist()
 
-        # Funkcja do dopasowania kodów pocztowych
-        def dopasuj_inny_kod_pocztowy(df, kolumna_kodu, kody):
-            # Tworzymy słownik do przechowywania liczby użyć każdego kodu
-            liczba_uzyc = {kod: 0 for kod in kody}
+        # Funkcja do dopasowania podobnych kodów
+        def dopasuj_inny_kod_pocztowy(kod, kody):
+            prefix_3 = kod[:4]
+            prefix_2 = kod[:2]
 
-            # Funkcja pomocnicza do dopasowania kodu
-            def znajdz_podobny_kod(kod):
-                prefix_3 = kod[:4]
-                prefix_2 = kod[:2]
+            # Najpierw próbujemy dopasować kod na podstawie trzech pierwszych cyfr
+            for kod_z_listy in kody:
+                if kod_z_listy.startswith(prefix_3) and kod_z_listy != kod:
+                    return kod_z_listy
 
-                # Próbujemy dopasować kod na podstawie trzech pierwszych cyfr
-                for kod_z_listy in kody:
-                    if kod_z_listy.startswith(prefix_3) and liczba_uzyc[kod_z_listy] == 0 and kod_z_listy != kod:
-                        liczba_uzyc[kod_z_listy] += 1
-                        return kod_z_listy
+            # Następnie próbujemy dopasować na podstawie dwóch pierwszych cyfr
+            for kod_z_listy in kody:
+                if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                    return kod_z_listy
 
-                # Próbujemy dopasować na podstawie dwóch pierwszych cyfr
-                for kod_z_listy in kody:
-                    if kod_z_listy.startswith(prefix_2) and liczba_uzyc[kod_z_listy] == 0 and kod_z_listy != kod:
-                        liczba_uzyc[kod_z_listy] += 1
-                        return kod_z_listy
+            # Jeżeli nie udało się znaleźć jeszcze dopasowania, dopasowujemy kod, który ma takie same dwie cyfry, ale pozwalamy na powtórzenia
+            for kod_z_listy in kody:
+                if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
+                    return kod_z_listy
 
-                # Jeśli nie znaleziono dopasowania, zwracamy inny kod
-                for kod_z_listy in kody:
-                    if kod_z_listy != kod:
-                        liczba_uzyc[kod_z_listy] += 1
-                        return kod_z_listy
+            # Jeśli nie ma żadnego dopasowania, zwracamy 
+            for kod_z_listy in kody:
+                if kod_z_listy != kod:
+                  liczba_uzyc[kod_z_listy] += 1
+                  return kod_z_listy
 
-            # Tworzymy nową kolumnę w df z dopasowanymi kodami
-            df['dopasowany_kod'] = df[kolumna_kodu].apply(znajdz_podobny_kod)
-            return df
-
-        # Dopasowujemy kody pocztowe dla wierszy, które nie są w liście
-        df_dopasowany = dopasuj_inny_kod_pocztowy(df_ipra_grouped[~df_ipra_grouped['Czy w liście']], 'Kod pocztowy', kody)
-
-        # Zmieniamy kolumny, aby uzyskać dodatkowe informacje
-        df_dopasowany = df_dopasowany.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy', how='left',
-                                             suffixes=('', '_dopasowany'))
-
-        # Zmieniamy nazwy kolumn
-        df_dopasowany = df_dopasowany.rename(columns={'dopasowany_kod': 'Kod pocztowy'})
+        # Utwórz kolumnę z dopasowanym kodem pocztowym
+        df['Dopasowany kod'] = None
         
-        # Łączymy oba zestawy danych
-        wynik = pd.concat([df_ipra_grouped[df_ipra_grouped['Czy w liście']], df_dopasowany], ignore_index=True)
+        # Sprawdzamy tylko te wiersze, które mają Rodzaj promocji 'IPRA' i nie są na liście
+        for index, row in df.iterrows():
+            if row['Rodzaj promocji'] == 'IPRA' and not row['Kod pocztowy'] in kody:
+                df.at[index, 'Dopasowany kod'] = dopasuj_inny_kod_pocztowy(row['Kod pocztowy'], kody)
+            else:
+                df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
 
-        # Dodajemy kolumny z datą
-        wynik['Rok wystawienia'] = datetime.datetime.now().year
-        wynik['Miesiąc wystawienia'] = datetime.datetime.now().month
+        # Dodaj dane aptek na podstawie dopasowanego kodu
+        df_dopasowany = df.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
+                                  left_on='Dopasowany kod', right_on='Kod pocztowy', how='left',
+                                  suffixes=('', '_dopasowany'))
 
-        # Zapisujemy wynikowy plik do pobrania
-        dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
+        # Przygotuj wynik do zapisu
+        df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'], inplace=True)
+        
+        # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            wynik.to_excel(writer, index=False, sheet_name='Sheet1')
+            df_dopasowany.to_excel(writer, index=False, sheet_name='Sheet1')
         excel_file.seek(0)
 
-        # Udostępniamy plik do pobrania w aplikacji Streamlit
+        # Udostępnij plik do pobrania w aplikacji Streamlit
         st.download_button(
-            label='PLIK RAPORTU (1)',
+            label='PLIK RAPORTU CENTRALNY (1)',
             data=excel_file,
-            file_name=f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx",
+            file_name=f"RAPORT GLENMARK OSTATECZNY_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
     except Exception as e:
-        # Obsługa błędów
+        # Obsługa błędów i wyświetlanie komunikatu o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
+
+if df_file:
+    try:
+        df = pd.read_excel(df_file)
+        lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
+
+        # Przetwarzanie danych
+        df = df[df['Rodzaj promocji'] == 'IPRA']
+        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+            'Ilość sprzedana': 'sum',
+            'Wartość sprzedaży': 'sum'
+        }).reset_index()
+
+        # Zidentyfikuj, czy kody pocztowe są w liście
+        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+
+        # Wydziel dane w liście
+        df1 = df[df['Czy w liście'] == True]
+        df2 = df[df['Czy w liście'] == False]
+
+        # Dodaj dane aptek dla df1
+        lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
+        df1 = df1.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
+                         on='Kod pocztowy', how='left')
+
+        # Przygotuj dane do eksportu
+        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana', 'Wartość sprzedaży']
+        df1 = df1[new_order]
+
+        # Zapisywanie raportu
+        dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
+
+        st.write('Kliknij, aby pobrać plik z raportem:')
+        excel_file = io.BytesIO()
+        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
+            df1.to_excel(writer, index=False, sheet_name='Sheet1')
+        excel_file.seek(0)
+
+        nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
+        st.download_button(
+            label='PLIK RAPORTU (1)',
+            data=excel_file,
+            file_name=nazwa_pliku,
+            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        )
+
+    except Exception as e:
+        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
+        st.write(f"Błąd szczegółowy: {e}")
+
+
 
 
 
