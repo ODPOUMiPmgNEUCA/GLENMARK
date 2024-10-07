@@ -161,6 +161,7 @@ if df_file:
         df2 = dfip[dfip['Czy w liście'] == False]
 
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
+        df1 = df1.merge(lista_unique[['Kod pocztowy']], on='Kod pocztowy', how='left')
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
