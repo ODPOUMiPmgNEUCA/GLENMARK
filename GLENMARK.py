@@ -152,16 +152,15 @@ if df_file:
 
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        df = df[df['Rodzaj promocji'] =='IPRA']
+        dfip = df[df['Rodzaj promocji'] =='IPRA']
 
-        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        dfip['Czy w liście'] = dfip['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
-        df1 = df[df['Czy w liście'] == True]
+        df1 = dfip[dfip['Czy w liście'] == True]
 
-        df2 = df[df['Czy w liście'] == False]
+        df2 = dfip[dfip['Czy w liście'] == False]
 
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
-        df1 = df1.merge(lista_unique[['Kod pocztowy','SAP','Nazwa apteki','Miejscowość','Ulica','Nr domu']], on='Kod pocztowy', how='left')
       
         # Wszystkie dostępne kody :
         kody = lista['Kod pocztowy'].unique().tolist()
@@ -201,36 +200,15 @@ if df_file:
             
 
           # Tworzymy nową kolumnę w df z dopasowanymi kodami
-          df['dopasowany_kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
+          dfip['dopasowany_kod'] = dfip['Kod pocztowy'].apply(znajdz_podobny_kod)
     
-          return df
+          return dfip
 
 
         # Użycie funkcji do dopasowania kodów pocztowych
         df_dopasowany = dopasuj_inny_kod_pocztowy(df2, 'Kod_pocztowy', kody)
 
-        df_dopasowany = df_dopasowany.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], left_on='dopasowany_kod', right_on='Kod pocztowy',how='left',
-                                   suffixes=('','_dopasowany'))
-        df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
-
-
-        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
-        new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
-                      'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
-      
-        df1.drop(columns='Czy w liście', inplace=True)
-        df1 = df1[new_order]
-
-        df_dopasowany.drop(columns=['Czy w liście','Kod pocztowy'], inplace=True)
-        df_dopasowany = df_dopasowany.rename(columns={'dopasowany_kod': 'Kod pocztowy'})
-        df_dopasowany = df_dopasowany[new_order]
-
         wynik = pd.concat([df1, df_dopasowany], ignore_index=True)
-      
-        wynik['Rok wystawienia'] = datetime.datetime.now().year
-        wynik['Miesiąc wystawienia'] = datetime.datetime.now().month
-        
-        wynik = wynik[new_order_]
 
         # Zapisywanie raportu : 
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
