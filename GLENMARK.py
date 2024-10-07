@@ -34,16 +34,36 @@ df_file = st.file_uploader(
 )
 
 
+import pandas as pd
+import streamlit as st
+import datetime
+import io
+
+# Umożliwienie wczytania pliku
+df_file = st.file_uploader(
+    label="Wrzuć plik raportu od działu rozliczeń :"
+)
+
 if df_file:
     try:
         # Załaduj plik główny oraz listę aptek
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        # Utwórz flagę, czy kod pocztowy jest na liście
-        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        # Przetwarzanie danych dla promocji 'IPRA'
+        df_ipra = df[df['Rodzaj promocji'] == 'IPRA']
+        df_ipra = df_ipra.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+            'Ilość sprzedana': 'sum',
+            'Wartość sprzedaży': 'sum'
+        }).reset_index()
 
-        # Unikalne kody z listy aptek
+        # Sprawdzenie sum ilości i wartości w df_ipra
+        total_quantity_ipra = df_ipra['Ilość sprzedana'].sum()
+        total_value_ipra = df_ipra['Wartość sprzedaży'].sum()
+        st.write(f"Suma ilości dla IPRA: {total_quantity_ipra}, Suma wartości dla IPRA: {total_value_ipra}")
+
+        # Flaga, czy kod pocztowy jest na liście
+        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
         kody = lista_unique['Kod pocztowy'].unique().tolist()
 
@@ -69,84 +89,55 @@ if df_file:
 
             # Jeśli nie ma żadnego dopasowania, zwracamy None
             return None
-            
+
         # Utwórz kolumnę z dopasowanym kodem pocztowym
-        df['Dopasowany kod'] = None
-        
-        # Sprawdzamy tylko te wiersze, które mają Rodzaj promocji 'IPRA' i nie są na liście
-        for index, row in df.iterrows():
-            if row['Rodzaj promocji'] == 'IPRA' and not row['Kod pocztowy'] in kody:
-                df.at[index, 'Dopasowany kod'] = dopasuj_inny_kod_pocztowy(row['Kod pocztowy'], kody)
-            else:
-                df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
+        df['Dopasowany kod'] = df.apply(lambda row: dopasuj_inny_kod_pocztowy(row['Kod pocztowy'], kody) 
+                                         if row['Rodzaj promocji'] == 'IPRA' and not row['Kod pocztowy'] in kody else row['Kod pocztowy'], axis=1)
 
-        # Dodaj dane aptek na podstawie dopasowanego kodu
-        df_dopasowany = df.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
-                                  left_on='Dopasowany kod', right_on='Kod pocztowy', how='left',
-                                  suffixes=('', '_dopasowany'))
-
-        # Przygotuj wynik do zapisu
-        df_dopasowany.drop(columns=['Kod pocztowy_dopasowany', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu'], inplace=True)
-        
-        # Zapisz wynikowy plik do pobrania
-        excel_file = io.BytesIO()
-        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            df_dopasowany.to_excel(writer, index=False, sheet_name='Sheet1')
-        excel_file.seek(0)
-
-        # Udostępnij plik do pobrania w aplikacji Streamlit
-        st.download_button(
-            label='PLIK RAPORTU CENTRALNY (1)',
-            data=excel_file,
-            file_name=f"RAPORT GLENMARK OSTATECZNY_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
-            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-
-    except Exception as e:
-        # Obsługa błędów i wyświetlanie komunikatu o błędzie
-        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
-        st.write(f"Błąd szczegółowy: {e}")
-
-if df_file:
-    try:
-        df = pd.read_excel(df_file)
-        lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-
-        # Przetwarzanie danych
-        df = df[df['Rodzaj promocji'] == 'IPRA']
-        df = df.groupby(['Kod pocztowy', 'Indeks', 'Nazwa towaru']).agg({
+        # Grupa danych na podstawie dopasowanych kodów
+        df_dopasowany = df.groupby(['Dopasowany kod', 'Indeks', 'Nazwa towaru']).agg({
             'Ilość sprzedana': 'sum',
             'Wartość sprzedaży': 'sum'
         }).reset_index()
 
-        # Zidentyfikuj, czy kody pocztowe są w liście
-        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
+        # Połączenie z listą aptek dla dopasowanych kodów
+        df_dopasowany = df_dopasowany.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']], 
+                                             left_on='Dopasowany kod', right_on='Kod pocztowy', how='left')
 
-        # Wydziel dane w liście
-        df1 = df[df['Czy w liście'] == True]
-        df2 = df[df['Czy w liście'] == False]
+        # Obliczanie sumy w df_dopasowany
+        total_quantity_dopasowany = df_dopasowany['Ilość sprzedana'].sum()
+        total_value_dopasowany = df_dopasowany['Wartość sprzedaży'].sum()
 
-        # Dodaj dane aptek dla df1
-        lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
-        df1 = df1.merge(lista_unique[['Kod pocztowy', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu']],
-                         on='Kod pocztowy', how='left')
+        st.write(f"Suma ilości dla dopasowanego: {total_quantity_dopasowany}, Suma wartości dla dopasowanego: {total_value_dopasowany}")
 
-        # Przygotuj dane do eksportu
-        new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana', 'Wartość sprzedaży']
-        df1 = df1[new_order]
+        # Sprawdzanie zgodności sum
+        if total_quantity_ipra == total_quantity_dopasowany:
+            st.write("Suma ilości zgadza się.")
+        else:
+            st.write("Suma ilości nie zgadza się.")
 
-        # Zapisywanie raportu
+        if total_value_ipra == total_value_dopasowany:
+            st.write("Suma wartości zgadza się.")
+        else:
+            st.write("Suma wartości nie zgadza się.")
+
+        # Przygotowanie końcowego raportu
+        df_ipra['Rok wystawienia'] = datetime.datetime.now().year
+        df_ipra['Miesiąc wystawienia'] = datetime.datetime.now().month
+
+        df_final = pd.concat([df_ipra, df_dopasowany], ignore_index=True)
+
+        # Zapisz raport
         dzisiejsza_data = datetime.datetime.now().strftime("%d.%m.%Y")
-
-        st.write('Kliknij, aby pobrać plik z raportem:')
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            df1.to_excel(writer, index=False, sheet_name='Sheet1')
+            df_final.to_excel(writer, index=False, sheet_name='Raport')
         excel_file.seek(0)
 
+        # Udostępnienie pliku do pobrania
         nazwa_pliku = f"RAPORT GLENMARK_{dzisiejsza_data}.xlsx"
         st.download_button(
-            label='PLIK RAPORTU (1)',
+            label='PLIK RAPORTU',
             data=excel_file,
             file_name=nazwa_pliku,
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -155,13 +146,6 @@ if df_file:
     except Exception as e:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
-
-
-
-
-
-
-
 
 
 
