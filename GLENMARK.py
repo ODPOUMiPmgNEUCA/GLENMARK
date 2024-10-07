@@ -219,10 +219,6 @@ if df_file:
         st.write(f"Błąd szczegółowy: {e}")
 '''
 
-df_file = st.file_uploader(
-    label="Wrzuć plik raportu od działu rozliczeń :"
-)
-
 if df_file:
     try:
         # Załaduj plik główny oraz listę aptek
