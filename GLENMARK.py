@@ -193,6 +193,12 @@ if df_file:
             else:
                 df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
 
+        # Oblicz sumy ilości i wartości sprzedaży
+        summary = df.groupby('Dopasowany kod').agg(
+            Suma_ilosci=('Ilość sprzedana', 'sum'),
+            Suma_wartosci=('Wartość sprzedaży', 'sum')
+        ).reset_index()
+        summary
 
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
