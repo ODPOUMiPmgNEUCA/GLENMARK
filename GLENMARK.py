@@ -33,7 +33,7 @@ df_file = st.file_uploader(
     label="Wrzuć plik raportu od działu rozliczeń :"
 )
 
-"""""
+'''
 if df_file:
     try:
         df = pd.read_excel(df_file)
@@ -217,7 +217,7 @@ if df_file:
         # Obsługa błędów i wyświetlanie komunikatu o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
-""""
+'''
 
 df_file = st.file_uploader(
     label="Wrzuć plik raportu od działu rozliczeń :"
