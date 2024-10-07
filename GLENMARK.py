@@ -92,9 +92,9 @@ if df_file:
                       'Dopasowany kod', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
         d['Rok wystawienia'] = datetime.datetime.now().year
         d['Miesiąc wystawienia'] = datetime.datetime.now().month
-        d.rename(columns={'Dopasowany kod': 'Kod pocztowy'}, inplace=True)
         
         d = d[new_order_]
+        d.rename(columns={'Dopasowany kod': 'Kod pocztowy'}, inplace=True)
 
         st.write('Kliknij, aby pobrać plik z raportem:')
         excel_file = io.BytesIO()
