@@ -73,7 +73,7 @@ if df_file:
             # Jeśli nie ma żadnego dopasowania, zwracamy pierwszy dostępny kod, który nie został wykorzystany
             for kod_z_listy in kody:
               if kod_z_listy != kod and kod_z_listy not in used_codes:
-              return kod_z_listy
+                return kod_z_listy
 
             
         # Utwórz kolumnę z dopasowanym kodem pocztowym
