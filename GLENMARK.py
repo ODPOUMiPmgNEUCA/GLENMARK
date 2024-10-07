@@ -153,15 +153,8 @@ if df_file:
         df = pd.read_excel(df_file)
         lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
 
-        # Zostaw tylko te wiersze, które mają Rodzaj promocji == "IPRA"
-        df_ipra = df[df['Rodzaj promocji'] == 'IPRA']
-
         # Utwórz flagę, czy kod pocztowy jest na liście
-        df_ipra['Czy w liście'] = df_ipra['Kod pocztowy'].isin(lista['Kod pocztowy'])
-
-        # Podziel na dwie części: te, które są w liście, i te, których nie ma
-        df_w_liscie = df_ipra[df_ipra['Czy w liście'] == True]
-        df_poza_lista = df_ipra[df_ipra['Czy w liście'] == False]
+        df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
 
         # Unikalne kody z listy aptek
         lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
@@ -195,6 +188,7 @@ if df_file:
                         liczba_uzyc[kod_z_listy] += 1
                         return kod_z_listy
 
+            # Zwróć dopasowany kod do nowej kolumny
             df['Dopasowany kod'] = df['Kod pocztowy'].apply(znajdz_podobny_kod)
             return df
 
@@ -205,15 +199,19 @@ if df_file:
         # Dodaj nową kolumnę z dopasowanymi kodami do oryginalnego DataFrame
         df.loc[df['Rodzaj promocji'] == 'IPRA', 'Dopasowany kod'] = df_ipra['Dopasowany kod']
 
+        # Dodaj kolumny "Rok wystawienia" i "Miesiąc wystawienia"
+        df['Rok wystawienia'] = datetime.datetime.now().year
+        df['Miesiąc wystawienia'] = datetime.datetime.now().month
+
         # Zapisz wynikowy plik do pobrania
         excel_file = io.BytesIO()
         with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            wynik.to_excel(writer, index=False, sheet_name='Sheet1')
+            df.to_excel(writer, index=False, sheet_name='Sheet1')
         excel_file.seek(0)
 
         # Udostępnij plik do pobrania w aplikacji Streamlit
         st.download_button(
-            label='PLIK RAPORTU NOWY',
+            label='PLIK RAPORTU INNY',
             data=excel_file,
             file_name=f"RAPORT GLENMARK_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
@@ -223,6 +221,7 @@ if df_file:
         # Obsługa błędów i wyświetlanie komunikatu o błędzie
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
+
 
 
 
