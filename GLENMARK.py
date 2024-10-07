@@ -105,6 +105,10 @@ if df_file:
                                    suffixes=('','_dopasowany'))
         df_dopasowany = df_dopasowany.drop(columns=['Kod pocztowy_dopasowany'])
 
+        print("Dopasowane kody:", df_dopasowany['dopasowany_kod'].unique())
+        print("Ilość kodów w df2:", df2.shape[0])
+        print("Ilość kodów w df_dopasowany:", df_dopasowany.shape[0])
+
 
         new_order = ['SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 'Kod pocztowy', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
