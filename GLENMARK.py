@@ -310,59 +310,6 @@ if df_file:
         st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
         st.write(f"Błąd szczegółowy: {e}")
 
-# Druga część - dla pliku z dopasowanymi kodami
-if df_file:
-    try:
-        # Załaduj plik główny oraz listę aptek
-        df = pd.read_excel(df_file)
-        lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
-
-        # Funkcja do dopasowania podobnych kodów
-        def dopasuj_inny_kod_pocztowy(kod, kody):
-            prefix_3 = kod[:4]
-            prefix_2 = kod[:2]
-
-            for kod_z_listy in kody:
-                if kod_z_listy.startswith(prefix_3) and kod_z_listy != kod:
-                    return kod_z_listy
-
-            for kod_z_listy in kody:
-                if kod_z_listy.startswith(prefix_2) and kod_z_listy != kod:
-                    return kod_z_listy
-
-            return None
-
-        # Utwórz kolumnę z dopasowanym kodem pocztowym
-        df['Dopasowany kod'] = None
-        
-        # Unikalne kody z listy aptek
-        lista_unique = lista.drop_duplicates(subset=['Kod pocztowy'])
-        kody = lista_unique['Kod pocztowy'].unique().tolist()
-
-        # Sprawdzamy tylko te wiersze, które mają Rodzaj promocji 'IPRA' i nie są na liście
-        for index, row in df.iterrows():
-            if row['Rodzaj promocji'] == 'IPRA' and row['Kod pocztowy'] not in kody:
-                df.at[index, 'Dopasowany kod'] = dopasuj_inny_kod_pocztowy(row['Kod pocztowy'], kody)
-            else:
-                df.at[index, 'Dopasowany kod'] = row['Kod pocztowy']  # Zachowaj oryginalny kod
-
-        # Zapisz wynikowy plik do pobrania
-        excel_file = io.BytesIO()
-        with pd.ExcelWriter(excel_file, engine='xlsxwriter') as writer:
-            df.to_excel(writer, index=False, sheet_name='Sheet1')
-        excel_file.seek(0)
-
-        # Udostępnij plik do pobrania w aplikacji Streamlit
-        st.download_button(
-            label='PLIK RAPORTU CENTRALNY(1)',
-            data=excel_file,
-            file_name=f"RAPORT GLENMARK OSTATECZNY_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
-            mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
-        )
-
-    except Exception as e:
-        st.error("Wystąpił problem podczas przetwarzania pliku. Upewnij się, że plik ma odpowiedni format i zawiera odpowiednie kolumny.")
-        st.write(f"Błąd szczegółowy: {e}")
 
 
 
