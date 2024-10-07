@@ -202,9 +202,9 @@ if df_file:
 
         # Udostępnij plik do pobrania w aplikacji Streamlit
         st.download_button(
-            label='PLIK RAPORTU KOLEJNY',
+            label='PLIK RAPORTU CENTRALNY',
             data=excel_file,
-            file_name=f"RAPORT GLENMARK_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
+            file_name=f"RAPORT GLENMARK OSTATECZNY_{datetime.datetime.now().strftime('%d.%m.%Y')}.xlsx",
             mime='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
         )
 
