@@ -98,7 +98,7 @@ if df_file:
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
                       'Dopasowany kod', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
         d['Rok wystawienia'] = datetime.datetime.now().year
-        d['Miesiąc wystawienia'] = datetime.datetime.now().month
+        d['Miesiąc wystawienia'] = (datetime.now() - relativedelta(months=1)).month
         
         d = d[new_order_]
         d.rename(columns={'Dopasowany kod': 'Kod pocztowy'}, inplace=True)
