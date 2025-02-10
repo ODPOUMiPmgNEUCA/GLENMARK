@@ -99,6 +99,7 @@ if df_file:
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
                       'Dopasowany kod', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
         #d['Rok wystawienia'] = datetime.datetime.now().year
+        previous_month_date = datetime.datetime.now() - relativedelta(months=1)
         d['Rok wystawienia'] = previous_month_date.year
         d['Miesiąc wystawienia'] = previous_month_date.month
         #d['Miesiąc wystawienia'] = (datetime.now() - relativedelta(months=1)).month
