@@ -11,7 +11,7 @@ from urllib.request import urlopen
 import json
 import io
 from rapidfuzz import process, fuzz
-from datetime import datetime
+import datetime
 from dateutil.relativedelta import relativedelta
 
 
@@ -98,8 +98,10 @@ if df_file:
 
         new_order_ = ['Rok wystawienia', 'Miesiąc wystawienia', 'SAP', 'Nazwa apteki', 'Miejscowość', 'Ulica', 'Nr domu', 
                       'Dopasowany kod', 'Indeks', 'Nazwa towaru', 'Ilość sprzedana','Wartość sprzedaży']
-        d['Rok wystawienia'] = datetime.datetime.now().year
-        d['Miesiąc wystawienia'] = (datetime.now() - relativedelta(months=1)).month
+        #d['Rok wystawienia'] = datetime.datetime.now().year
+        d['Rok wystawienia'] = previous_month_date.year
+        d['Miesiąc wystawienia'] = previous_month_date.month
+        #d['Miesiąc wystawienia'] = (datetime.now() - relativedelta(months=1)).month
         
         d = d[new_order_]
         d.rename(columns={'Dopasowany kod': 'Kod pocztowy'}, inplace=True)
