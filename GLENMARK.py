@@ -38,7 +38,7 @@ if df_file:
     try:
         # Załaduj plik główny oraz listę aptek
         df = pd.read_excel(df_file)
-        lista = pd.read_excel('Lista aptek Glenmark_.xlsx')
+        lista = pd.read_excel('Lista aptek Glenmark_(1).xlsx')
 
         # Utwórz flagę, czy kod pocztowy jest na liście
         df['Czy w liście'] = df['Kod pocztowy'].isin(lista['Kod pocztowy'])
